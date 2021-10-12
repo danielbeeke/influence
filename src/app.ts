@@ -112,9 +112,11 @@ export const drawApp = async () => {
 
     await render(document.body, ids.length ? columnsRender() : searchForm())
 
-    for (const column of columns) {
-        column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
-    }
+    setTimeout(() => {
+        for (const column of columns) {
+            column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
+        }    
+    }, 100)
 }
 
 setTimeout(() => {
