@@ -1,0 +1,112 @@
+@use "sass:math";
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+}
+
+
+$imageWidth: 75px;
+
+.person {
+    flex: 0 0 auto;
+    display: flex;
+    position: relative;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+
+    .name {
+        font-size: 14px;
+        max-width: 140px;
+        word-break: normal;
+        margin-block: 0;
+        color: black;
+    }
+
+    .image,
+    .image-alternative {
+        border: 3px solid white;
+        overflow: hidden;
+        border-radius: 50%;
+        width: $imageWidth;
+        height: $imageWidth;
+        display: block;
+        line-height: $imageWidth;
+        overflow: hidden;
+        flex: 0 0 $imageWidth;
+    }
+
+    .image-alternative {
+        text-align: center;
+        font-size: 20px;
+        display: block;
+        color: white;
+        background-color: var(--color);
+        filter: contrast(100%);
+
+        span {
+            mix-blend-mode: difference;
+        }
+    }
+}
+
+.people {
+    display: flex;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+}
+
+.column {
+    display: flex;
+    justify-content: safe center;
+    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    width: 215px;
+
+    > .inner {
+        height: calc(var(--count) * #{$imageWidth - 20px} + 20px);
+        position: relative;
+
+        .scroll-maker {
+            height: calc(var(--count) * #{$imageWidth - 20px} + 20px);
+            width: 10px;
+            position: absolute;
+            top: 0;
+            pointer-events: none;
+        }
+
+        > .person {
+            transition: transform .3s .3s ease-in-out, opacity .3s calc(.6s + .05s * var(--index)) ease-in-out;
+            top: 50%; 
+            position: absolute;
+            transform: translateY(calc((var(--index) * #{$imageWidth - 20px}) - ((var(--count) * #{$imageWidth - 20px} + 20px) / 2)));
+        }
+    }
+
+    &.active .inner {
+        .person {
+            transform: translateY(calc((-50%  + var(--scroll))));
+            transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
+
+            &:not(.active) {
+                opacity: 0;
+            }
+
+            &.active {
+                opacity: 1;
+                z-index: 3;
+            }
+        }
+    }
+}
+
+.selected {
+    margin-inline: 60px;
+}

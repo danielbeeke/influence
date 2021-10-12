@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@jacobmarshall/kv": "^0.2.0",
+    "uhtml": "^2.7.6"
+  },
+  "lock": {
+    "@jacobmarshall/kv#^0.2.0": "@jacobmarshall/kv@v0.2.0-kqoUJmUJFSB7QAB9AzOS",
+    "uhtml#^2.7.6": "uhtml@v2.7.6-C85prQpvVh3fpigzHBnI"
+  }
+}
