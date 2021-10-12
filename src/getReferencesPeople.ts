@@ -2,16 +2,17 @@ import { lastPart } from './JsonLdProxy.js'
 import { fetchResource } from './fetchResource.js';
 
 export const getReferencesPeople = async (jsonLdArray: Array<any>, sortBy: Array<string> = null) => {
-    const proxies = await Promise.all(jsonLdArray
+    let ids = jsonLdArray
     .map(i => lastPart(i._))
     .filter(Boolean)
-    .map(async identifier => {
-        const proxy = await fetchResource(identifier)
-        proxy['_identifier'] = identifier
-        return proxy
-    }))
 
-    const results = proxies.filter(item => item['rdf:type'].some(rdfClass => rdfClass._ === 'http://xmlns.com/foaf/0.1/Person'))
+    ids = ids.flatMap(id => id.replaceAll(' ', '_').split(',_'))
+    
+    const proxies = await Promise.all(ids.map(fetchResource))
+
+    const results = proxies.filter(item => {        
+        return item?.['rdf:type']?.some(rdfClass => rdfClass._ === 'http://xmlns.com/foaf/0.1/Person')
+    })
 
     if (!sortBy) return results
 

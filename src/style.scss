@@ -8,6 +8,15 @@ html, body {
     font-family: 'Rubik', sans-serif;
 }
 
+body {
+    flex-direction: column;
+    display: flex;
+    transition: opacity .5s ease-in-out;
+}
+
+body.is-loading {
+    opacity: 0;
+}
 
 $imageSize: 75px;
 $border: 3px;
@@ -20,12 +29,43 @@ $border: 3px;
     align-items: center;
     text-decoration: none;
 
+    &:before {
+        border-radius: 50%;
+        z-index: -1;
+        width: $imageSize;
+        height: $imageSize;
+        display: block;
+        background: white;
+        position: absolute;
+        left: 0;
+        content: '';
+        top: 0;
+    }
+
     .name {
         font-size: 14px;
         max-width: 140px;
         word-break: normal;
         margin-block: 0;
         color: black;
+
+        &:before, &:after {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 6px;
+            position: absolute;
+            background: black;
+            left: 24px;
+            top: 50%;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity .3s ease-in-out;
+        }
+
+        &:after {
+            transform: rotate(90deg);
+        }
     }
 
     .image,
@@ -38,6 +78,7 @@ $border: 3px;
         display: block;
         line-height: $imageSize - ($border * 2);
         overflow: hidden;
+        transition: opacity .3s ease-in-out;
         flex: 0 0 $imageSize - ($border * 2);
     }
 
@@ -51,6 +92,31 @@ $border: 3px;
 
         span {
             mix-blend-mode: difference;
+        }
+    }
+
+    &.active {
+        .name {
+            &:before {
+                transform: rotate(45deg);
+            }
+
+            &:after {
+                transform: rotate(-45deg);
+            }
+        }
+    }
+
+    &:hover {
+        .name {
+            &:before, &:after {
+                opacity: 1;
+            }
+        }
+
+        .image,
+        .image-alternative {
+            opacity: .3;
         }
     }
 }
@@ -69,7 +135,7 @@ $border: 3px;
     max-height: 100%;
     overflow-y: auto;
     scrollbar-width: none;
-    width: 215px;
+    width: 250px;
 
     > .inner {
         height: calc(var(--count) * #{$imageSize - 20px});
@@ -112,4 +178,50 @@ $border: 3px;
 
 .selected {
     margin-inline: 60px;
+}
+
+.search-form {
+    margin: auto;
+    display: flex;
+    max-width: 500px;
+    width: 100%;
+    flex-direction: column;
+
+    > label {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+}
+
+.search-input {
+    padding: 10px;
+    border-radius: 50px;
+    border: 1px solid rgb(212, 212, 212);
+    margin-bottom: 10px;
+}
+
+.suggestion {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+
+    .image {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .title {
+        padding-left: 10px;
+        height: 40px;
+        margin: 0;
+        flex: 1 1 auto;
+        line-height: 40px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        border-bottom: 1px solid rgb(212, 212, 212);
+    }
 }

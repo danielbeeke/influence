@@ -1,8 +1,10 @@
 import { fetchResource } from './fetchResource.js';
 import { getReferencesPeople } from './getReferencesPeople.js';
 import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
-import { thumbnailUrl } from './thumbnailUrl.js';
+import { debounce } from './debounce.js';
 import { thumbnailAlternative } from './thumbnailAlternative.js';
+import { lastPart } from './JsonLdProxy.js';
+import { thumbnailUrl } from './thumbnailUrl.js';
 
 document.body.addEventListener('click', (event: Event) => {
     const element = (event as any).target.nodeName !== 'A' ? (event as any).target.closest('a') : (event as any).target
@@ -16,53 +18,51 @@ document.body.addEventListener('click', (event: Event) => {
         })
       }
     }
-  })
+})
 
-
-const identifier = decodeURI(location.pathname.substr(1))
-if (!identifier) throw new Error('Please type some as the pathname')
-const jsonLd = await fetchResource(identifier)
-jsonLd._identifier = identifier
-
-// Unknown sorts become the first items. This works good in case of Abraham.
-const sortOrder = ['dbo:birthDate', 'dbo:birthYear', 'dbo:activeYearsStartYear']
-const influences = await getReferencesPeople(jsonLd['influences'], sortOrder)
-const influenced = await getReferencesPeople(jsonLd['influenced'], sortOrder)
-
-const addIdToUrl = (mainIdentifier: string, id: string, column: string) => {
-    const search = new URLSearchParams(location.search)
-
-    if (column) {
-        let ids = search.get(column) ? [...search.get(column).split(','), id] : [id]
-        search.set(column, ids.join(','))
-    }
-    else {
-    return `/${mainIdentifier}`
-    }
-    
-    return `/${mainIdentifier}?${search}`
+const removeIdFromUrl = (id: string, columnIndex: number) => {
+    let parts = location.pathname.substr(1).split(',')
+    parts.splice(columnIndex)
+    return `/${parts.join(',')}`    
 }
 
-const personTemplate = (jsonLd, index: number = 0, column: string = '') => {    
+const addIdToUrl = (id: string, columnIndex: number) => {
+    let parts = location.pathname.substr(1).split(',')
+
+    if (columnIndex < 0) {
+        parts = [id]
+
+    }
+    else {
+        parts.splice(columnIndex)
+        parts[columnIndex] = id
+    }
+
+    return `/${parts.join(',')}`    
+}
+
+const personTemplate = (jsonLd, index: number = 0, columnIndex: number) => {    
+    if (!jsonLd) return null
+    const isActive = addActiveClass(jsonLd._identifier, columnIndex)
+
     return html`
         <a 
-            href=${addIdToUrl(identifier, jsonLd._identifier, column)} 
-            class=${`person ${addActiveClass(jsonLd._identifier)}`} 
+            href=${isActive ? removeIdFromUrl(jsonLd._identifier, columnIndex) : addIdToUrl(jsonLd._identifier, columnIndex)} 
+            class=${`person ${isActive ? 'active' : ''}`} 
             style=${`--index: ${index}`}
             data-id=${jsonLd._identifier}>
         
-            ${jsonLd['depiction']?._ ? 
-                html`<img class="image" src=${thumbnailUrl(jsonLd['depiction']._)} />` : 
-                thumbnailAlternative(jsonLd['label']?._)}
-    
+                ${thumbnailAlternative(jsonLd['depiction']?._, jsonLd['label']?._)}
+
                 <h3 class="name">${jsonLd['label']?._}</h3>
         
         </a>
     `
 }
 
-const addActiveClass = (search: string) => {
-    return decodeURI(location.toString()).includes(search) ? 'active' : ''
+const addActiveClass = (search: string, columnIndex: number) => {
+    const ids = decodeURI(location.pathname).substr(1).split(',')
+    return ids[columnIndex]  === search
 }
 
 const onscroll = (event) => {
@@ -71,36 +71,108 @@ const onscroll = (event) => {
 }
 
 const onref = (element) => {
-    setTimeout(() => {
-        element.style = `--scroll: 0px; --half: ${element.clientHeight / 2}px`
-    })
+    columns.push(element)
 }
 
-const drawApp = () => {
-    render(document.body, html`
+const columns = []
+let suggestions = []
+const drawApp = async () => {
+    const ids = decodeURI(location.pathname).substr(1).trim().split(',').filter(Boolean)
+    const people = await Promise.all(ids.map(fetchResource))
 
+    // Unknown sorts become the first items. This works good in case of Abraham.
+    const sortOrder = ['dbo:birthDate', 'dbo:birthYear', 'dbo:activeYearsStartYear']
+
+    const createColumn = async (jsonLd, columnName: string, columnIndex: number) => {
+        const items = jsonLd?.[columnName]?.length ? await getReferencesPeople(jsonLd[columnName], sortOrder) : []
+        const hasActive = items.some(person => addActiveClass(person._identifier, columnIndex))
+
+        return html`
+        <div onscroll=${onscroll} style=${`--count: ${items.length}`} class=${`${columnName} column ${hasActive ? 'active' : ''}`}>
+            <div ref=${onref} class="inner">
+                ${items.map((person, index) => personTemplate(person, index, columnIndex))}
+                <div class="scroll-maker"></div>
+            </div>
+        </div>
+        `
+    }
+
+    const search = async (event) => {
+        if (event.target.value.length < 4) return
+        
+        const query = `
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX dbo:  <http://dbpedia.org/ontology/>
+            PREFIX bif: <bif:>
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        
+            SELECT DISTINCT ?uri ?label ?image {
+        
+            ?uri rdfs:label ?label .
+            ?uri a <http://xmlns.com/foaf/0.1/Person> .
+            ?uri dbo:thumbnail ?image .
+            ?label bif:contains '"${event.target.value}"' .
+            filter langMatches(lang(?label), "en")
+            }
+        
+            LIMIT 10        
+        `
+
+        const url = `https://dbpedia.org/sparql${'?query='}${encodeURIComponent(query)}&format=json`
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/sparql-results+json',
+            },
+        })
+
+        const json = await response.json()
+        suggestions = json.results.bindings.map(binding => {
+            return {
+                label: binding.label.value,
+                image: binding.image.value,
+                id: lastPart(binding.uri.value)
+            }
+        })
+
+        drawApp()
+    }
+
+    const searchForm = () => {
+        return html`
+            <form class="search-form">
+                <label>Please search for a person</label>
+                <input onkeyup=${debounce(search, 500)} type="search" class="search-input">
+
+                ${suggestions.map(suggestion => html`
+                    <a class="suggestion" href=${`/${suggestion.id}`} onclick=${() => suggestions = []}>
+                        <img class="image" src=${thumbnailUrl(suggestion.image)} />
+                        <h3 class="title">${suggestion.label}</h3>
+                    </div>
+                `)}
+
+            </form>
+        `
+    }
+
+    const columnsRender = () => html`
         <div class="people">
 
-            <div onscroll=${onscroll} style=${`--count: ${influences.length}`} class=${`influences column ${addActiveClass('influences')}`}>
-                <div ref=${onref} class="inner">
-                    ${influences.map((person, index) => personTemplate(person, index, 'influences'))}
-                    <div class="scroll-maker"></div>
-                </div>
-            </div>
-
-            <div class="selected column">
-                ${personTemplate(jsonLd)}
-            </div>
-
-            <div onscroll=${onscroll} style=${`--count: ${influenced.length}`} class=${`influenced column ${addActiveClass('influenced')}`}>
-                <div ref=${onref} class="inner">
-                    ${influenced.map((person, index) => personTemplate(person, index, 'influenced'))}
-                    <div class="scroll-maker"></div>
-                </div>
-            </div>
+            ${createColumn(people[0], 'influences', -1)}
+            <div class="selected column">${personTemplate(people[0], 0, 0)}</div>
+            ${people.map((person, index) => createColumn(person, 'influenced', index + 1))}
 
         </div>
-    `)
+    `
+
+    await render(document.body, ids.length ? columnsRender() : searchForm())
+
+    for (const column of columns) {
+        column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
+    }
 }
 
+setTimeout(() => {
+    document.body.classList.remove('is-loading')
+}, 800)
 drawApp()
