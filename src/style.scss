@@ -137,6 +137,10 @@ $border: 3px;
     scrollbar-width: none;
     width: 250px;
 
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     > .inner {
         height: calc(var(--count) * #{$imageSize - 20px});
         position: relative;
