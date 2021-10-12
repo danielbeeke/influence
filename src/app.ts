@@ -67,11 +67,13 @@ const addActiveClass = (search: string) => {
 
 const onscroll = (event) => {
     const inner = event.target.querySelector('.inner')
-    inner.style = `--scroll: ${event.target.scrollTop}px`
+    inner.style = `--scroll: ${event.target.scrollTop}px; --half: ${event.target.clientHeight / 2}px`
 }
 
 const onref = (element) => {
-    element.style = `--scroll: 0px;`
+    setTimeout(() => {
+        element.style = `--scroll: 0px; --half: ${element.clientHeight / 2}px`
+    })
 }
 
 const drawApp = () => {

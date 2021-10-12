@@ -9,7 +9,8 @@ html, body {
 }
 
 
-$imageWidth: 75px;
+$imageSize: 75px;
+$border: 3px;
 
 .person {
     flex: 0 0 auto;
@@ -29,15 +30,15 @@ $imageWidth: 75px;
 
     .image,
     .image-alternative {
-        border: 3px solid white;
+        border: $border solid white;
         overflow: hidden;
         border-radius: 50%;
-        width: $imageWidth;
-        height: $imageWidth;
+        width: $imageSize - ($border * 2);
+        height: $imageSize - ($border * 2);
         display: block;
-        line-height: $imageWidth;
+        line-height: $imageSize - ($border * 2);
         overflow: hidden;
-        flex: 0 0 $imageWidth;
+        flex: 0 0 $imageSize - ($border * 2);
     }
 
     .image-alternative {
@@ -71,22 +72,24 @@ $imageWidth: 75px;
     width: 215px;
 
     > .inner {
-        height: calc(var(--count) * #{$imageWidth - 20px} + 20px);
+        height: calc(var(--count) * #{$imageSize - 20px});
         position: relative;
 
         .scroll-maker {
-            height: calc(var(--count) * #{$imageWidth - 20px} + 20px);
+            height: calc(var(--count) * #{$imageSize - 20px} + 20px);
             width: 10px;
             position: absolute;
             top: 0;
+            // background-color: red;
             pointer-events: none;
         }
 
         > .person {
-            transition: transform .3s .3s ease-in-out, opacity .3s calc(.6s + .05s * var(--index)) ease-in-out;
+            transition: transform .3s .3s ease-in-out, opacity .3s calc(.6s + .02s * var(--index)) ease-in-out;
             top: 50%; 
             position: absolute;
-            transform: translateY(calc((var(--index) * #{$imageWidth - 20px}) - ((var(--count) * #{$imageWidth - 20px} + 20px) / 2)));
+            transform: 
+            translateY(calc(var(--index) * #{$imageSize} + -20px * var(--index) - var(--half)));
         }
     }
 
