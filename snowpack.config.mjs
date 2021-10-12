@@ -11,5 +11,13 @@ export default {
     ],
     plugins: [
       '@snowpack/plugin-sass'
-    ]
+    ],
+    buildOptions: {
+      out: 'docs'
+    },
+    optimize: {
+      bundle: true,
+      minify: true,
+      target: 'es2018',
+    },
   };
