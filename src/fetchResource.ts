@@ -18,7 +18,6 @@ export const fetchResource = async (identifier: string) => {
             json = false
         }
         await cache.set(identifier, json)
-        return null
     }
     
     const allGraphs = JsonLdProxy(json, context, {}, ['rdfs', 'dbp', 'foaf'])
