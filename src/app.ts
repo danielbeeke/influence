@@ -96,27 +96,23 @@ const createColumn = async (jsonLd, columnName: string, columnIndex: number) => 
     `
 }
 
+const columnsRender = (people) => html`
+<div class="people">
+    ${createColumn(people[0], 'influences', -1)}
+    <div class="selected column">${personTemplate(people[0], 0, 0)}</div>
+    ${people.map((person, index) => createColumn(person, 'influenced', index + 1))}
+</div>
+`
+
 export const drawApp = async () => {
     const ids = decodeURI(location.pathname).substr(1).trim().split(',').filter(Boolean)
     const people = await Promise.all(ids.map(fetchResource))
 
-    const columnsRender = () => html`
-        <div class="people">
+    await render(document.body, ids.length ? columnsRender(people) : searchForm())
 
-            ${createColumn(people[0], 'influences', -1)}
-            <div class="selected column">${personTemplate(people[0], 0, 0)}</div>
-            ${people.map((person, index) => createColumn(person, 'influenced', index + 1))}
-
-        </div>
-    `
-
-    await render(document.body, ids.length ? columnsRender() : searchForm())
-
-    setTimeout(() => {
-        for (const column of columns) {
-            column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
-        }    
-    }, 100)
+    for (const column of columns) {
+        column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
+    }    
 }
 
 setTimeout(() => {

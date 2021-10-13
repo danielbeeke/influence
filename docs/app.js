@@ -48,13 +48,11 @@ import J from"https://cdn.skypack.dev/@jacobmarshall/kv";var m=t=>t.split(/\/|#|
             <div class="scroll-maker"></div>
         </div>
     </div>
-    `},b=async()=>{let t=decodeURI(location.pathname).substr(1).trim().split(",").filter(Boolean),e=await Promise.all(t.map(g)),o=()=>w`
-        <div class="people">
-
-            ${O(e[0],"influences",-1)}
-            <div class="selected column">${F(e[0],0,0)}</div>
-            ${e.map((n,i)=>O(n,"influenced",i+1))}
-
-        </div>
-    `;await Y(document.body,t.length?o():U());for(let n of I)n.style=`--scroll: 0px; --half: ${n.clientHeight/2}px`};setTimeout(()=>{document.body.classList.remove("is-loading")},800);b();export{b as drawApp,$ as suggestions,v as updateSuggestions};
+    `},Z=t=>w`
+<div class="people">
+    ${O(t[0],"influences",-1)}
+    <div class="selected column">${F(t[0],0,0)}</div>
+    ${t.map((e,o)=>O(e,"influenced",o+1))}
+</div>
+`,b=async()=>{let t=decodeURI(location.pathname).substr(1).trim().split(",").filter(Boolean),e=await Promise.all(t.map(g));await Y(document.body,t.length?Z(e):U());for(let o of I)o.style=`--scroll: 0px; --half: ${o.clientHeight/2}px`};setTimeout(()=>{document.body.classList.remove("is-loading")},800);b();export{b as drawApp,$ as suggestions,v as updateSuggestions};
 //# sourceMappingURL=app.js.map
