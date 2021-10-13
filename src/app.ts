@@ -3,6 +3,7 @@ import { getReferencesPeople } from './getReferencesPeople.js';
 import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
 import { thumbnailAlternative } from './thumbnailAlternative.js';
 import { searchForm } from './searchForm.js'
+import { disableScroll, enableScroll } from './disableScroll'
 
 document.body.addEventListener('click', (event: Event) => {
     const element = (event as any).target.nodeName !== 'A' ? (event as any).target.closest('a') : (event as any).target
@@ -87,7 +88,7 @@ const createColumn = async (jsonLd, columnName: string, columnIndex: number) => 
     const hasActive = items.some(person => addActiveClass(person._identifier, columnIndex))
 
     return html`
-    <div onscroll=${onscroll} style=${`--count: ${items.length}`} class=${`${columnName} column ${hasActive ? 'active' : ''}`}>
+    <div onscroll=${onscroll} style=${`--count: ${items.length}`} class=${`${columnName} column ${hasActive ? 'active' : 'is-loading'}`}>
         <div ref=${onref} class="inner">
             ${items.map((person, index) => personTemplate(person, index, columnIndex))}
             <div class="scroll-maker"></div>
@@ -110,8 +111,17 @@ export const drawApp = async () => {
 
     await render(document.body, ids.length ? columnsRender(people) : searchForm())
 
-    for (const column of columns) {
+    for (const [index, column] of columns.entries()) {
+        if (column.parentElement.classList.contains('active')) {
+            disableScroll(column.parentElement)
+        }
+        else {
+            enableScroll(column.parentElement)
+        }
         column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
+        setTimeout(() => {
+            column.parentElement.classList.remove('is-loading')
+        }, 500)
     }    
 }
 

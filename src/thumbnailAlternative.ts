@@ -6,7 +6,10 @@ const cache = kv('thumbnailAlternative')
 
 export const thumbnailAlternative = async (preferredImage: string, label: string) => {
     const initials = label?.replace(/[^A-Z]/g,'').split('').map(name => name.substr(0, 1))
-    let image = preferredImage ?? await cache.get(label)
+    let image = await cache.get(label)
+    if (image === undefined) {
+        image = preferredImage
+    }
 
     const fallback = () => {
         return html`<div class="image-alternative" style=${`--color: #${stringToColor(label)}`}>
@@ -26,10 +29,12 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
         await cache.set(label, image)
     }
 
-    const onerror = (event) => {
+    const onerror = async (event) => {
         const replacement = document.createElement('div')
         render(replacement, fallback())
         event.target.replaceWith(replacement)
+        console.log(label)
+        await cache.set(label, false)
     }
     
     if (image === false) return fallback()

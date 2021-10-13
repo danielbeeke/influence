@@ -48,6 +48,8 @@ $border: 3px;
         word-break: normal;
         margin-block: 0;
         color: black;
+        transition: opacity .3s ease-in-out;
+        opacity: 1;
 
         &:before, &:after {
             content: '';
@@ -121,6 +123,12 @@ $border: 3px;
     }
 }
 
+.is-loading .person {
+    .name {
+        opacity: 0;
+    }
+}
+
 .people {
     display: flex;
     height: 100%;
@@ -163,20 +171,22 @@ $border: 3px;
         }
     }
 
-    &.active .inner {
-        .person {
-            transform: translateY(calc((-50%  + var(--scroll))));
-            transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
-
-            &:not(.active) {
-                opacity: 0;
+    &.active {
+        .inner {
+            .person {
+                transform: translateY(calc((-50%  + var(--scroll))));
+                transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
+    
+                &:not(.active) {
+                    opacity: 0;
+                }
+    
+                &.active {
+                    opacity: 1;
+                    z-index: 3;
+                }
             }
-
-            &.active {
-                opacity: 1;
-                z-index: 3;
-            }
-        }
+        }    
     }
 }
 

@@ -3,7 +3,7 @@
  * @param uri 
  */
  export const lastPart = (uri) => {
-  const split = uri.split(/\/|#|\:/)
+  const split = uri.split(/\/|#/)
   return split.pop()
 }
 
