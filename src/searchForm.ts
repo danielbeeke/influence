@@ -1,8 +1,16 @@
 import { html } from 'https://cdn.skypack.dev/uhtml/async';
 import { debounce } from './debounce.js';
-import { lastPart } from './JsonLdProxy.js';
 import { thumbnailUrl } from './thumbnailUrl.js';
 import { updateSuggestions, drawApp, suggestions } from './app.js';
+
+/**
+ * Returns the last part of an RDF URI. (After the # or : or /)
+ * @param uri 
+ */
+ export const lastPart = (uri) => {
+    const split = uri.split(/\/|#/)
+    return split.pop()
+  }
 
 const search = async (event) => {
     if (event.target.value.length < 4) return
@@ -14,12 +22,11 @@ const search = async (event) => {
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     
         SELECT DISTINCT ?uri ?label ?image {
-    
-        ?uri rdfs:label ?label .
-        ?uri a <http://xmlns.com/foaf/0.1/Person> .
-        ?uri dbo:thumbnail ?image .
-        ?label bif:contains '"${event.target.value}"' .
-        filter langMatches(lang(?label), "en")
+            ?uri rdfs:label ?label .
+            ?uri a <http://xmlns.com/foaf/0.1/Person> .
+            ?uri dbo:thumbnail ?image .
+            ?label bif:contains '"${event.target.value}"' .
+            filter langMatches(lang(?label), "en")
         }
     
         LIMIT 10        

@@ -1,9 +1,9 @@
-import { fetchResource } from './fetchResource.js';
-import { getReferencesPeople } from './getReferencesPeople.js';
 import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
 import { thumbnailAlternative } from './thumbnailAlternative.js';
 import { searchForm } from './searchForm.js'
+import { getPerson, getInfluenced, getInfluencedBy } from './getDbpediaData.js';
 import { disableScroll, enableScroll } from './disableScroll'
+import { Person } from './types'
 
 document.body.addEventListener('click', (event: Event) => {
     const element = (event as any).target.nodeName !== 'A' ? (event as any).target.closest('a') : (event as any).target
@@ -40,20 +40,19 @@ const addIdToUrl = (id: string, columnIndex: number) => {
     return `/${parts.join(',')}`    
 }
 
-const personTemplate = (jsonLd, index: number = 0, columnIndex: number) => {    
-    if (!jsonLd) return null
-    const isActive = addActiveClass(jsonLd._identifier, columnIndex)
+const personTemplate = (person: Person, index: number = 0, columnIndex: number) => {    
+    const isActive = addActiveClass(person.id, columnIndex)
 
     return html`
         <a 
-            href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(jsonLd._identifier, columnIndex)} 
+            href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)} 
             class=${`person ${isActive ? 'active' : ''}`} 
             style=${`--index: ${index}`}
-            data-id=${jsonLd._identifier}>
+            data-id=${person.id}>
         
-                ${thumbnailAlternative(jsonLd['depiction']?._, jsonLd['label']?._)}
+                ${thumbnailAlternative(person.image, person.label)}
 
-                <h3 class="name">${jsonLd['label']?._}</h3>
+                <h3 class="name">${person.label}</h3>
         
         </a>
     `
@@ -80,36 +79,42 @@ export const updateSuggestions = (newSuggestions) => {
     suggestions = newSuggestions
 }
 
-// Unknown sorts become the first items. This works good in case of Abraham.
-const sortOrder = ['dbo:birthDate', 'dbo:birthYear', 'dbo:activeYearsStartYear']
+const createColumn = async (id, peopleGetter: Function, columnIndex: number) => {
 
-const createColumn = async (jsonLd, columnName: string, columnIndex: number) => {
-    const items = jsonLd?.[columnName]?.length ? await getReferencesPeople(jsonLd[columnName], sortOrder) : []
-    const hasActive = items.some(person => addActiveClass(person._identifier, columnIndex))
+    const people: Array<Person> = await peopleGetter(id)
+    const hasActive = people.some(person => addActiveClass(person.id, columnIndex))
 
     return html`
-    <div onscroll=${onscroll} style=${`--count: ${items.length}`} class=${`${columnName} column ${hasActive ? 'active' : 'is-loading'}`}>
+    <div onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${hasActive ? 'active' : 'is-loading'}`}>
         <div ref=${onref} class="inner">
-            ${items.map((person, index) => personTemplate(person, index, columnIndex))}
+            ${people.map((person, index) => personTemplate(person, index, columnIndex))}
             <div class="scroll-maker"></div>
         </div>
     </div>
     `
 }
 
-const columnsRender = (people) => html`
-<div class="people">
-    ${createColumn(people[0], 'influences', -1)}
-    <div class="selected column">${personTemplate(people[0], 0, 0)}</div>
-    ${people.map((person, index) => createColumn(person, 'influenced', index + 1))}
-</div>
-`
+const columnsRender = async (ids) => {
+    const person = await getPerson(ids[0])
+
+    return html`
+    <div class="people">
+        ${createColumn(ids[0], getInfluencedBy, -1)}
+        <div class="selected column">${personTemplate(person, 0, 0)}</div>
+        ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
+    </div>
+    `
+}
 
 export const drawApp = async () => {
     const ids = decodeURI(location.pathname).substr(1).trim().split(',').filter(Boolean)
-    const people = await Promise.all(ids.map(fetchResource))
 
-    await render(document.body, ids.length ? columnsRender(people) : searchForm())
+    try {
+        await render(document.body, ids.length ? columnsRender(ids) : searchForm())
+    }
+    catch (exception) {
+        console.info(exception)
+    }
 
     for (const [index, column] of columns.entries()) {
         if (column.parentElement.classList.contains('active')) {

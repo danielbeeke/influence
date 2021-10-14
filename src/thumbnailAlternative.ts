@@ -30,10 +30,10 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     }
 
     const onerror = async (event) => {
-        const replacement = document.createElement('div')
-        render(replacement, fallback())
-        event.target.replaceWith(replacement)
-        console.log(label)
+        // const replacement = document.createElement('div')
+        // render(replacement, fallback())
+        // event.target.replaceWith(replacement)
+        // console.log(label)
         await cache.set(label, false)
     }
     
