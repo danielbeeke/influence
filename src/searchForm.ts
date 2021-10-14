@@ -1,6 +1,6 @@
 import { html } from 'https://cdn.skypack.dev/uhtml/async';
 import { debounce } from './debounce.js';
-import { thumbnailUrl } from './thumbnailUrl.js';
+import { thumbnailAlternative } from './thumbnailAlternative.js';
 import { updateSuggestions, drawApp, suggestions } from './app.js';
 
 /**
@@ -54,13 +54,13 @@ const search = async (event) => {
 
 export const searchForm = () => {
     return html`
-        <form class="search-form">
+        <form class="search-form" onsubmit=${(e) => e.preventDefault()}>
             <label>Please search for a person</label>
             <input onkeyup=${debounce(search, 500)} type="search" class="search-input">
 
             ${suggestions.map(suggestion => html`
                 <a class="suggestion" href=${`/${suggestion.id}`} onclick=${() => updateSuggestions([])}>
-                    <img class="image" src=${thumbnailUrl(suggestion.image)} />
+                    ${thumbnailAlternative(suggestion.image, suggestion.label)}
                     <h3 class="title">${suggestion.label}</h3>
                 </div>
             `)}

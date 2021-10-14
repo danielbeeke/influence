@@ -19,6 +19,10 @@ document.body.addEventListener('click', (event: Event) => {
     }
 })
 
+window.addEventListener('popstate', (event) => {
+    drawApp()
+})
+
 const removeIdFromUrl = (columnIndex: number) => {
     let parts = location.pathname.substr(1).split(',')
     parts.splice(columnIndex)
@@ -44,32 +48,37 @@ const personTemplate = (person: Person, index: number = 0, columnIndex: number) 
     const isActive = addActiveClass(person.id, columnIndex)
 
     return html`
-        <a 
-            href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)} 
+        <div 
             class=${`person ${isActive ? 'active' : ''}`} 
             style=${`--index: ${index}`}
             data-id=${person.id}>
         
                 ${thumbnailAlternative(person.image, person.label)}
 
-                <h3 class="name">${person.label}</h3>
+                <h3 class="name">
+                <span>
+                    ${person.label}
+                    </span>
+                        <a class="action-button" href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)}></a>        
+                </h3>
         
-        </a>
+        </div>
     `
 }
 
+const getIds = () => {
+    const ids = decodeURI(location.pathname).substr(1).split(',').filter(Boolean)
+    return ids
+}
+
 const addActiveClass = (search: string, columnIndex: number) => {
-    const ids = decodeURI(location.pathname).substr(1).split(',')
+    const ids = getIds()
     return ids[columnIndex]  === search
 }
 
 const onscroll = (event) => {
     const inner = event.target.querySelector('.inner')
     inner.style = `--scroll: ${event.target.scrollTop}px; --half: ${event.target.clientHeight / 2}px`
-}
-
-const onref = (element) => {
-    columns.push(element)
 }
 
 const columns = []
@@ -85,8 +94,8 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number) => 
     const hasActive = people.some(person => addActiveClass(person.id, columnIndex))
 
     return html`
-    <div onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${hasActive ? 'active' : 'is-loading'}`}>
-        <div ref=${onref} class="inner">
+    <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${hasActive ? 'active' : 'is-loading'}`}>
+        <div class="inner" style=${`--scroll: 0px; --half: ${((people.length * 55) + 20) / 2}px`}>
             ${people.map((person, index) => personTemplate(person, index, columnIndex))}
             <div class="scroll-maker"></div>
         </div>
@@ -107,7 +116,7 @@ const columnsRender = async (ids) => {
 }
 
 export const drawApp = async () => {
-    const ids = decodeURI(location.pathname).substr(1).trim().split(',').filter(Boolean)
+    const ids = getIds()
 
     try {
         await render(document.body, ids.length ? columnsRender(ids) : searchForm())
@@ -117,15 +126,15 @@ export const drawApp = async () => {
     }
 
     for (const [index, column] of columns.entries()) {
-        if (column.parentElement.classList.contains('active')) {
-            disableScroll(column.parentElement)
+        if (column.classList.contains('active')) {
+            disableScroll(column)
         }
         else {
-            enableScroll(column.parentElement)
+            enableScroll(column)
         }
-        column.style = `--scroll: 0px; --half: ${column.clientHeight / 2}px`
+
         setTimeout(() => {
-            column.parentElement.classList.remove('is-loading')
+            column.classList.remove('is-loading')
         }, 500)
     }    
 }

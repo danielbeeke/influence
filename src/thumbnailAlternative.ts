@@ -2,6 +2,7 @@ import { stringToColor } from './stringToColor.js'
 import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
 import kv from 'https://cdn.skypack.dev/@jacobmarshall/kv';
 import { thumbnailUrl } from './thumbnailUrl.js'
+import { drawApp } from './app.js';
 const cache = kv('thumbnailAlternative')
 
 export const thumbnailAlternative = async (preferredImage: string, label: string) => {
@@ -30,10 +31,7 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     }
 
     const onerror = async (event) => {
-        // const replacement = document.createElement('div')
-        // render(replacement, fallback())
-        // event.target.replaceWith(replacement)
-        // console.log(label)
+        // drawApp()
         await cache.set(label, false)
     }
     
