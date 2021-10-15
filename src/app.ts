@@ -95,7 +95,7 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number) => 
 
     return html`
     <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${hasActive ? 'active' : 'is-loading'}`}>
-        <div class="inner" style=${`--scroll: 0px; --half: ${((people.length * 55) + 20) / 2}px`}>
+        <div class="inner" style=${`--scroll: 0px; --half: ${Math.min((people.length * 55) + 20, window.innerHeight) / 2}px`}>
             ${people.map((person, index) => personTemplate(person, index, columnIndex))}
             <div class="scroll-maker"></div>
         </div>
@@ -107,11 +107,11 @@ const columnsRender = async (ids) => {
     const person = await getPerson(ids[0])
 
     return html`
-    <div class="people">
-        ${createColumn(ids[0], getInfluencedBy, -1)}
-        <div class="selected column">${personTemplate(person, 0, 0)}</div>
-        ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
-    </div>
+        <div class="people">
+            ${createColumn(ids[0], getInfluencedBy, -1)}
+            <div class="selected column">${personTemplate(person, 0, 0)}</div>
+            ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
+        </div>
     `
 }
 
@@ -126,20 +126,10 @@ export const drawApp = async () => {
     }
 
     for (const [index, column] of columns.entries()) {
-        if (column.classList.contains('active')) {
-            disableScroll(column)
-        }
-        else {
-            enableScroll(column)
-        }
-
-        setTimeout(() => {
-            column.classList.remove('is-loading')
-        }, 500)
+        column.classList.contains('active') ? disableScroll(column) : enableScroll(column)
+        setTimeout(() => column.classList.remove('is-loading'), 500)
     }    
 }
 
-setTimeout(() => {
-    document.body.classList.remove('is-loading')
-}, 800)
+setTimeout(() => document.body.classList.remove('is-loading'), 800)
 drawApp()
