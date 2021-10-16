@@ -181,7 +181,7 @@ $border: 3px;
 
 .people {
     display: flex;
-    max-height: calc(100% - 54px);
+    height: calc(100% - 54px);
     align-content: center;
     justify-content: safe center;
 }
