@@ -18,14 +18,15 @@ function superEncodeURI(url) {
     return encodedStr;
   }
   
-const personQuery = (identifier:string , langCode: string) => `
+const personQuery = (identifier:string , langCode: string, detailed = false) => `
     PREFIX dbo: <http://dbpedia.org/ontology/>
     PREFIX dbr: <http://dbpedia.org/resource/>
 
-    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image
+    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ${detailed ? ` ?abstract ` : ''}
     WHERE {
         <http://dbpedia.org/resource/${identifier}> rdfs:label ?label .
         BIND (<http://dbpedia.org/resource/${identifier}> as ?person)
+        ${detailed ? ` ?person dbo:abstract  ?abstract . ` : ''}
         OPTIONAL {<http://dbpedia.org/resource/${identifier}> foaf:depiction ?image }
         FILTER (lang(?label) = '${langCode}')
     }
@@ -79,8 +80,8 @@ const processSparqlBindings = (sparqlResults: { head: { vars: Array<string> }, r
     return singular ? results[0] : results
 }
 
-export const getPerson = async (identifier, langCode = 'en'): Promise<Person> => {
-    const response = await fetchQuery(personQuery(identifier, langCode))
+export const getPerson = async (identifier, langCode = 'en', detailed = false): Promise<Person> => {
+    const response = await fetchQuery(personQuery(identifier, langCode, detailed))
     return processSparqlBindings(response, true) as unknown as Person
 }
 

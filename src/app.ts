@@ -55,6 +55,8 @@ const personTemplate = (person: Person, index: number = 0, columnIndex: number) 
         
                 ${thumbnailAlternative(person.image, person.label)}
 
+                <button class="zoom" onclick=${() => { location.hash = person.id; drawApp(); } }></button>
+
                 <h3 class="name">
                 <span>
                     ${person.label}
@@ -106,15 +108,29 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number) => 
 const columnsRender = async (ids) => {
     const person = await getPerson(ids[0])
 
+    let moreInformation = null
+    if (location.hash) {
+        const id = decodeURI(location.hash).substr(1)
+        const moreInformation = await getPerson(id, 'en', true)
+        console.log(moreInformation)
+    }
+
     return html`
         <div class="people">
             ${createColumn(ids[0], getInfluencedBy, -1)}
             <div class="selected column">${personTemplate(person, 0, 0)}</div>
             ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
         </div>
+
+        ${moreInformation ? html`
+            <div class="more-information">
+            
+            </div>
+        ` : null}
     `
 }
 
+let dbpediaIsDown = false
 export const drawApp = async () => {
     const ids = getIds()
 
@@ -122,7 +138,13 @@ export const drawApp = async () => {
         await render(document.body, ids.length ? columnsRender(ids) : searchForm())
     }
     catch (exception) {
-        console.info(exception)
+        if (exception.message === 'NetworkError when attempting to fetch resource.') {
+            dbpediaIsDown = true
+            render(document.body, html`<h1 class="dbpedia-offline">Unfortunatly DBpedia is down.<br>Please come back later.</h1>`)
+        }
+        else {
+            console.info(exception.message)
+        }
     }
 
     for (const [index, column] of columns.entries()) {
