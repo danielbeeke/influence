@@ -5,6 +5,19 @@ import { getPerson, getInfluenced, getInfluencedBy } from './getDbpediaData.js';
 import { disableScroll, enableScroll } from './disableScroll'
 import { Person } from './types'
 
+import * as Sentry from "@sentry/browser";
+import { Integrations } from "@sentry/tracing";
+
+Sentry.init({
+  dsn: "https://cd8164655d204832bba96a931a6a018e@o483393.ingest.sentry.io/6010247",
+  integrations: [new Integrations.BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
+
 document.body.addEventListener('click', (event: Event) => {
     const element = (event as any).target.nodeName !== 'A' ? (event as any).target.closest('a') : (event as any).target
     if (element) {
