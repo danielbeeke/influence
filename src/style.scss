@@ -12,6 +12,7 @@ body {
     flex-direction: column;
     display: flex;
     transition: opacity .5s ease-in-out;
+    scroll-snap-type: x mandatory;
 }
 
 body.is-loading {
@@ -180,12 +181,13 @@ $border: 3px;
 
 .people {
     display: flex;
-    height: 100%;
+    max-height: calc(100% - 54px);
     align-content: center;
-    justify-content: center;
+    justify-content: safe center;
 }
 
 .column {
+    scroll-snap-align: start;
     display: flex;
     justify-content: safe center;
     flex-direction: column;
@@ -193,9 +195,17 @@ $border: 3px;
     overflow-y: auto;
     scrollbar-width: none;
     width: 320px;
-
+    flex: 0 0 320px;
+    border-left: 1px dashed rgb(180, 180, 180);
+    padding-inline-start: 20px;
+    padding-block: 40px;
+    
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    &.selected {
+        background: rgb(243, 243, 255);
     }
 
     > .inner {
@@ -203,7 +213,7 @@ $border: 3px;
         position: relative;
 
         .scroll-maker {
-            height: calc(var(--count) * #{$imageSize - 20px} + 20px);
+            height: calc(var(--count) * #{$imageSize - 20px} + 60px);
             width: 10px;
             position: absolute;
             top: 0;
@@ -215,14 +225,14 @@ $border: 3px;
             top: 50%; 
             position: absolute;
             transform: 
-            translateY(calc(var(--index) * #{$imageSize} + -20px * var(--index) - var(--half)));
+            translateY(calc(var(--index) * #{$imageSize} + -20px * var(--index) - var(--half) + 40px));
         }
     }
 
     &.active {
         .inner {
             .person {
-                transform: translateY(calc((-50%  + var(--scroll))));
+                transform: translateY(calc((-50%  + var(--scroll) + 30px)));
                 transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
     
                 &:not(.active) {
@@ -236,10 +246,6 @@ $border: 3px;
             }
         }    
     }
-}
-
-.selected {
-    margin-inline: 60px;
 }
 
 .search-form {
@@ -267,6 +273,7 @@ $border: 3px;
     align-items: center;
     text-decoration: none;
     color: black;
+    margin-bottom: 10px;
 
     .image-alternative,
     .image {
@@ -300,5 +307,144 @@ $border: 3px;
         text-overflow: ellipsis;
         width: 100%;
         border-bottom: 1px solid rgb(212, 212, 212);
+    }
+}
+
+.headers {
+    display: flex;
+    flex: 0 0 auto;
+    align-content: center;
+    justify-content: safe center;
+}
+
+.column-title {
+    border-left: 1px dashed rgb(180, 180, 180);
+    font-size: 12px;
+    color: gray;
+    margin: 0;
+    padding: 20px;
+    pointer-events: none;
+    width: 300px;
+    position: relative;
+    flex: 0 0 300px;
+
+    &.selected {
+        background: rgb(243, 243, 255);
+    }
+
+    &:not(.selected):after {
+        content: '';
+        display: block;
+        height: 40px;
+        background: linear-gradient(white 0%, rgba(0, 0, 0, 0) 100%);
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 100%;
+        z-index: 10;
+    }
+}
+
+body {
+
+    &:after {
+        content: '';
+        display: block;
+        width: 101vw;
+        height: 101vh;
+        background: black;
+        top: 50%;
+        left: 50%;
+        position: fixed;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 20;
+    }
+
+}
+
+body[data-selected-person="true"]:after {
+    opacity: .3;
+}
+
+.selected-person {
+    width: calc(100vw - 80px);
+    max-width: 800px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    position: absolute;
+    top: 50%;
+    padding: 0 40px 20px 40px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    z-index: 30;
+    box-shadow: 0 5px 10px rgba(black, .3);
+
+    .image {
+        width: 100%;
+        float: left;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0;
+        position: sticky;
+        top: 0px;
+        margin: 0;
+        padding: 30px 0 ;
+        background: white;
+    }
+
+    .abstract {
+        font-size: 17px;
+        line-height: 30px;
+    }
+
+    .close {
+        width: 30px;
+        height: 30px;
+        appearance: none;
+        display: block;
+        border: none;
+        background: white;
+        position: relative;
+        cursor: pointer;
+
+       &:before, 
+        &:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            height: 4px;
+            width: 100%;
+            background: black;
+            content: '';
+        }
+
+        &:before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &:after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+    }
+}
+
+@media screen and (min-width: 720px) {
+    .selected-person {
+        max-width: 600px;
+        max-height: calc(100vh - 200px);
+
+        .image {
+            width: 200px;
+            margin-right: 40px;
+        }
     }
 }

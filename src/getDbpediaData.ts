@@ -25,10 +25,11 @@ const personQuery = (identifier:string , langCode: string, detailed = false) => 
     SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ${detailed ? ` ?abstract ` : ''}
     WHERE {
         <http://dbpedia.org/resource/${identifier}> rdfs:label ?label .
+        ${detailed ? `OPTIONAL { <http://dbpedia.org/resource/${identifier}> dbo:abstract  ?abstract }` : ''}
         BIND (<http://dbpedia.org/resource/${identifier}> as ?person)
-        ${detailed ? ` ?person dbo:abstract  ?abstract . ` : ''}
         OPTIONAL {<http://dbpedia.org/resource/${identifier}> foaf:depiction ?image }
         FILTER (lang(?label) = '${langCode}')
+        ${detailed ? `FILTER (lang(?abstract) = '${langCode}')` : ''}
     }
 `
 

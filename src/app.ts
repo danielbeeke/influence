@@ -97,7 +97,7 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number) => 
 
     return html`
     <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${hasActive ? 'active' : 'is-loading'}`}>
-        <div class="inner" style=${`--scroll: 0px; --half: ${Math.min((people.length * 55) + 20, window.innerHeight) / 2}px`}>
+        <div class="inner" style=${`--scroll: 0px; --half: ${Math.min((people.length * 55) + 40, window.innerHeight - 40) / 2}px`}>
             ${people.map((person, index) => personTemplate(person, index, columnIndex))}
             <div class="scroll-maker"></div>
         </div>
@@ -105,32 +105,49 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number) => 
     `
 }
 
-const columnsRender = async (ids) => {
-    const person = await getPerson(ids[0])
+const closePopup = () => {
+    location.hash = ''
+    drawApp()
+}
 
-    let moreInformation = null
+const columnsRender = async (ids) => {
+    const persons = await Promise.all(ids.map(id => getPerson(id)))
+    let selectedPerson = null
     if (location.hash) {
         const id = decodeURI(location.hash).substr(1)
-        const moreInformation = await getPerson(id, 'en', true)
-        console.log(moreInformation)
+        selectedPerson = id ? await getPerson(id, 'en', true) : null
     }
 
+    document.body.dataset.selectedPerson = (!!selectedPerson).toString()
+
     return html`
+        ${selectedPerson ? html`
+        <div class="selected-person">
+            <h1 class="title">${selectedPerson.label} <button class="close" onclick=${closePopup}></button></h1>
+            <div class="abstract">
+                ${selectedPerson.image ? html`<img class="image" src=${`https://images.weserv.nl/?url=${selectedPerson.image}&w=300`} />` : null}
+                ${selectedPerson.abstract}
+            </div>
+        </div>        
+        ` : null}
+
+        <div class="headers">
+            <h3 class="column-title">${`Influencers of ${persons[0].label}`}</h3>
+            <h3 class="column-title selected">Your starting selection:</h3>
+            ${ids.map((id, index) => html`<h3 class="column-title">Influenced by ${persons[index].label}</h3>`)}
+        </div>
         <div class="people">
             ${createColumn(ids[0], getInfluencedBy, -1)}
-            <div class="selected column">${personTemplate(person, 0, 0)}</div>
+            <div class="selected column" style="--count: 1">
+                <div class="inner" style="--half: 47px;">
+                ${personTemplate(persons[0], 0, 0)}
+                </div>
+            </div>
             ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
         </div>
-
-        ${moreInformation ? html`
-            <div class="more-information">
-            
-            </div>
-        ` : null}
     `
 }
 
-let dbpediaIsDown = false
 export const drawApp = async () => {
     const ids = getIds()
 
@@ -139,7 +156,6 @@ export const drawApp = async () => {
     }
     catch (exception) {
         if (exception.message === 'NetworkError when attempting to fetch resource.') {
-            dbpediaIsDown = true
             render(document.body, html`<h1 class="dbpedia-offline">Unfortunatly DBpedia is down.<br>Please come back later.</h1>`)
         }
         else {
