@@ -3,7 +3,6 @@
     overflow-y: auto;
     margin-right: 20px;
     font-size: 12px;
-    position: fixed;
     line-height: 18px;
     max-width: 300px;
 }
@@ -13,14 +12,8 @@
     color: rgb(49, 49, 49);
 }
 
-.works {
-    margin-top: 100px;
+.item-lists {
+    position: absolute;
     max-height: calc(50vh - 140px);
-    top: 50%;
-}
-
-.interests {
-    margin-top: 100px;
-    max-height: calc(50vh - 140px);
-    bottom: 50%;
+    top: 170px;
 }

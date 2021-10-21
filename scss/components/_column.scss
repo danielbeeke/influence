@@ -44,7 +44,7 @@
     &.active {
         .inner {
             .person {
-                transform: translateY(calc((-50%  + var(--scroll) + 30px)));
+                transform: translateY(calc((-50vh  + var(--scroll) + 60px)));
                 transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
     
                 &:not(.active) {

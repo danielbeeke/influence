@@ -150,12 +150,16 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number) => 
     <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
         <div class="inner" style=${`--scroll: 0px; --half: ${Math.min((people.length * 55) + 40, window.innerHeight - 40) / 2}px`}>
             ${people.map((person, index) => personTemplate(person, index, columnIndex))}
-            ${activePerson ? showWorks(activePerson) : null}
-            ${activePerson ? showInterests(activePerson) : null}
-            ${activePerson ? showIdeas(activePerson) : null}
 
             <div class="scroll-maker"></div>
         </div>
+
+        <div class="item-lists">
+            ${activePerson ? showWorks(activePerson) : null}
+            ${activePerson ? showInterests(activePerson) : null}
+            ${activePerson ? showIdeas(activePerson) : null}
+        </div>
+
     </div>
     `
 }
