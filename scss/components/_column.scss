@@ -1,0 +1,61 @@
+.column {
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: safe center;
+    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    width: 320px;
+    flex: 0 0 320px;
+    border-left: 1px dashed rgb(180, 180, 180);
+    padding-inline-start: 20px;
+    padding-block: 40px;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &.selected {
+        background: rgb(243, 243, 255);
+    }
+
+    > .inner {
+        height: calc(var(--count) * #{$imageSize - 20px});
+        position: relative;
+
+        .scroll-maker {
+            height: calc(var(--count) * #{$imageSize - 20px} + 60px);
+            width: 10px;
+            position: absolute;
+            top: 0;
+            pointer-events: none;
+        }
+
+        > .person {
+            transition: transform .3s .3s ease-in-out, opacity .3s calc(.6s + .02s * var(--index)) ease-in-out;
+            top: 50%; 
+            position: absolute;
+            transform: 
+            translateY(calc(var(--index) * #{$imageSize} + -20px * var(--index) - var(--half) + 40px));
+        }
+    }
+
+    &.active {
+        .inner {
+            .person {
+                transform: translateY(calc((-50%  + var(--scroll) + 30px)));
+                transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
+    
+                &:not(.active) {
+                    opacity: 0;
+                }
+    
+                &.active {
+                    opacity: 1;
+                    z-index: 3;
+                }
+            }
+        }    
+    }
+}

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "snowpack dev",
-    "build": "snowpack build && echo \"influence.danielbeeke.nl\" > docs/CNAME"
+    "build": "snowpack build && echo \"influence.danielbeeke.nl\" > docs/CNAME && cp docs/index.html docs/404.html"
   },
   "devDependencies": {
     "@snowpack/plugin-sass": "^1.4.0",

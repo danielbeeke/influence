@@ -1,0 +1,17 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+}
+
+body {
+    flex-direction: column;
+    display: flex;
+    transition: opacity .5s ease-in-out;
+    scroll-snap-type: x mandatory;
+}
+
+body.is-loading {
+    opacity: 0;
+}

@@ -1,0 +1,26 @@
+.item-list {
+    padding: 0;
+    overflow-y: auto;
+    margin-right: 20px;
+    font-size: 12px;
+    position: fixed;
+    line-height: 18px;
+    max-width: 300px;
+}
+
+.item {
+    text-decoration: none;
+    color: rgb(49, 49, 49);
+}
+
+.works {
+    margin-top: 100px;
+    max-height: calc(50vh - 140px);
+    top: 50%;
+}
+
+.interests {
+    margin-top: 100px;
+    max-height: calc(50vh - 140px);
+    bottom: 50%;
+}

@@ -1,0 +1,101 @@
+.selected-person {
+    width: calc(100vw - 80px);
+    max-width: 800px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    position: absolute;
+    top: 50%;
+    padding: 0 40px 20px 40px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    z-index: 30;
+    box-shadow: 0 5px 10px rgba(black, .3);
+
+    .image {
+        width: 100%;
+        float: left;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0;
+        position: sticky;
+        top: 0px;
+        margin: 0;
+        padding: 30px 0 ;
+        background: white;
+    }
+
+    .abstract {
+        font-size: 17px;
+        line-height: 30px;
+    }
+
+    .close {
+        width: 30px;
+        height: 30px;
+        appearance: none;
+        display: block;
+        border: none;
+        background: white;
+        position: relative;
+        cursor: pointer;
+
+       &:before, 
+        &:after {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            height: 4px;
+            width: 100%;
+            background: black;
+            content: '';
+        }
+
+        &:before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &:after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+    }
+}
+
+@media screen and (min-width: 720px) {
+    .selected-person {
+        max-width: 600px;
+        max-height: calc(100vh - 200px);
+
+        .image {
+            width: 200px;
+            margin-right: 40px;
+        }
+    }
+}
+
+body {
+    &:after {
+        content: '';
+        display: block;
+        width: 101vw;
+        height: 101vh;
+        background: black;
+        top: 50%;
+        left: 50%;
+        position: fixed;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 20;
+    }
+}
+
+body[data-selected-person="true"]:after {
+    opacity: .3;
+}

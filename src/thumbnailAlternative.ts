@@ -1,5 +1,5 @@
 import { stringToColor } from './stringToColor.js'
-import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
+import { html } from 'https://cdn.skypack.dev/uhtml/async';
 import kv from 'https://cdn.skypack.dev/@jacobmarshall/kv';
 import { thumbnailUrl } from './thumbnailUrl.js'
 import { drawApp } from './app.js';
@@ -31,7 +31,7 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     }
 
     const onerror = async (event) => {
-        // drawApp()
+        drawApp()
         await cache.set(label, false)
     }
     

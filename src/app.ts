@@ -1,7 +1,7 @@
 import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
 import { thumbnailAlternative } from './thumbnailAlternative.js';
 import { searchForm } from './searchForm.js'
-import { getPerson, getInfluenced, getInfluencedBy } from './getDbpediaData.js';
+import { getPerson, getInfluenced, getInfluencedBy, getWorks, getInterests, getNotableIdeas } from './getDbpediaData.js';
 import { disableScroll, enableScroll } from './disableScroll'
 import { Person } from './types'
 
@@ -11,10 +11,6 @@ import { Integrations } from "@sentry/tracing";
 Sentry.init({
   dsn: "https://cd8164655d204832bba96a931a6a018e@o483393.ingest.sentry.io/6010247",
   integrations: [new Integrations.BrowserTracing()],
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
   tracesSampleRate: 1.0,
 });
 
@@ -58,7 +54,7 @@ const addIdToUrl = (id: string, columnIndex: number) => {
 }
 
 const personTemplate = (person: Person, index: number = 0, columnIndex: number) => {    
-    const isActive = addActiveClass(person.id, columnIndex)
+    const isActive = hasActivePerson(person.id, columnIndex)
 
     return html`
         <div 
@@ -70,12 +66,12 @@ const personTemplate = (person: Person, index: number = 0, columnIndex: number) 
 
                 <button class="zoom" onclick=${() => { location.hash = person.id; drawApp(); } }></button>
 
-                <h3 class="name">
-                <span>
-                    ${person.label}
-                    </span>
-                        <a class="action-button" href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)}></a>        
-                </h3>
+                <a class="name" href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)}>
+                    ${person.birth ? html`<span class="dates">${person.birth.substr(0, 4)} ${person.death ? html` / ${person.death.substr(0, 4)}` : null}</span>` : null}
+                    <span>${person.label}</span>
+                </a>
+
+                <span class="action-button"></span>
         
         </div>
     `
@@ -86,9 +82,9 @@ const getIds = () => {
     return ids
 }
 
-const addActiveClass = (search: string, columnIndex: number) => {
+const hasActivePerson = (search: string, columnIndex: number) => {
     const ids = getIds()
-    return ids[columnIndex]  === search
+    return ids[columnIndex] === search
 }
 
 const onscroll = (event) => {
@@ -103,15 +99,61 @@ export const updateSuggestions = (newSuggestions) => {
     suggestions = newSuggestions
 }
 
+const cleanDate = (dateString: string) => {
+    const matches = dateString?.match(/\d{4}/g).map(year => parseInt(year)) ?? []
+    const year = Math.min(...matches)
+    return year !== Infinity ? year : null
+}
+
+const showWorks = async (person) => {
+    const works = await getWorks(person.id) as Array<{ label: string, date: string, cleanedDate: number, id: string }>
+    for (const work of works) work.cleanedDate = cleanDate(work.date)
+    works.sort((a, b) => a.cleanedDate - b.cleanedDate)
+
+    return works.length ? html`
+    <ul class="works item-list">
+        <h3>Works:</h3>
+        ${works.map(work => html`<li><a class="work item" href=${`#${work.id}`}>${work.label} ${work.date ? html`(${cleanDate(work.date)})` : null}</a></li>`)}
+    </ul>
+    ` : null
+}
+
+const showInterests = async (person) => {
+    const interests = await getInterests(person.id) as Array<{ label: string, date: string, cleanedDate: number, id: string }>
+
+    return interests.length ? html`
+    <ul class="interests item-list">
+        <h3>Interests:</h3>
+        ${interests.map(interest => html`<li><a class="interest item" href=${`#${interest.id}`}>${interest.label}</a></li>`)}
+    </ul>
+    ` : null
+}
+
+
+const showIdeas = async (person) => {
+    const ideas = await getNotableIdeas(person.id) as Array<{ label: string, date: string, cleanedDate: number, id: string }>
+
+    return ideas.length ? html`
+    <ul class="ideas item-list">
+        <h3>Ideas:</h3>
+        ${ideas.map(idea => html`<li><a class="idea item" href=${`#${idea.id}`}>${idea.label}</a></li>`)}
+    </ul>
+    ` : null
+}
+
 const createColumn = async (id, peopleGetter: Function, columnIndex: number) => {
 
     const people: Array<Person> = await peopleGetter(id)
-    const hasActive = people.some(person => addActiveClass(person.id, columnIndex))
+    const activePerson = people.find(person => hasActivePerson(person.id, columnIndex))
 
     return html`
-    <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${hasActive ? 'active' : 'is-loading'}`}>
+    <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
         <div class="inner" style=${`--scroll: 0px; --half: ${Math.min((people.length * 55) + 40, window.innerHeight - 40) / 2}px`}>
             ${people.map((person, index) => personTemplate(person, index, columnIndex))}
+            ${activePerson ? showWorks(activePerson) : null}
+            ${activePerson ? showInterests(activePerson) : null}
+            ${activePerson ? showIdeas(activePerson) : null}
+
             <div class="scroll-maker"></div>
         </div>
     </div>
@@ -128,7 +170,7 @@ const columnsRender = async (ids) => {
     let selectedPerson = null
     if (location.hash) {
         const id = decodeURI(location.hash).substr(1)
-        selectedPerson = id ? await getPerson(id, 'en', true) : null
+        selectedPerson = id ? await getPerson(id, 'en') : null
     }
 
     document.body.dataset.selectedPerson = (!!selectedPerson).toString()
@@ -145,17 +187,13 @@ const columnsRender = async (ids) => {
         ` : null}
 
         <div class="headers">
-            <h3 class="column-title">${`Influencers of ${persons[0].label}`}</h3>
+            <h3 class="column-title">${`Influencers of ${(persons[0] as Person).label}`}</h3>
             <h3 class="column-title selected">Your starting selection:</h3>
-            ${ids.map((id, index) => html`<h3 class="column-title">Influenced by ${persons[index].label}</h3>`)}
+            ${ids.map((id, index) => html`<h3 class="column-title">Influenced by ${(persons[index] as Person).label}</h3>`)}
         </div>
         <div class="people">
             ${createColumn(ids[0], getInfluencedBy, -1)}
-            <div class="selected column" style="--count: 1">
-                <div class="inner" style="--half: 47px;">
-                ${personTemplate(persons[0], 0, 0)}
-                </div>
-            </div>
+            ${createColumn(ids[0], () => [persons[0]], 0)}
             ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
         </div>
     `

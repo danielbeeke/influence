@@ -1,0 +1,20 @@
+.search-form {
+    margin: auto;
+    display: flex;
+    max-width: 500px;
+    width: 100%;
+    flex-direction: column;
+
+    > label {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+}
+
+.search-input {
+    padding: 10px;
+    border-radius: 50px;
+    border: 1px solid rgb(212, 212, 212);
+    margin-bottom: 10px;
+}
+

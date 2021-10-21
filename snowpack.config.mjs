@@ -1,6 +1,7 @@
 export default {
     mount: {
-        "src": "/"
+        "src": "/",
+        "scss": "/",
     },
     routes: [
       {

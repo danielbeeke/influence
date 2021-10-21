@@ -1,0 +1,13 @@
+.people {
+    display: flex;
+    height: calc(100% - 54px);
+    align-content: center;
+    justify-content: safe center;
+}
+
+.headers {
+    display: flex;
+    flex: 0 0 auto;
+    align-content: center;
+    justify-content: safe center;
+}

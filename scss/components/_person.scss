@@ -1,0 +1,170 @@
+
+$imageSize: 75px;
+$border: 3px;
+
+.person {
+    will-change: auto;
+    width: 100%;
+    display: flex;
+    position: relative;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+    cursor: default;
+
+    .dates {
+        font-size: 10px;
+        color: gray;
+    }
+
+    &:before {
+        border-radius: 50%;
+        z-index: -1;
+        width: $imageSize;
+        height: $imageSize;
+        display: block;
+        background: white;
+        position: absolute;
+        left: 0;
+        content: '';
+        top: 0;
+    }
+
+    .name {
+        font-size: 14px;
+        width: 100%;
+        margin-block: 0;
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
+        transition: opacity .3s ease-in-out;
+        opacity: 1;
+        padding-right: 45px;
+        position: relative;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        > span {
+            flex: 0 0 auto;
+            display: inline-block;
+            word-break: normal;
+            max-width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+
+    .action-button {
+        width: 20px;
+        height: 20px;
+        pointer-events: none;
+        display: block;
+        opacity: 0;
+        transition: opacity .3s ease-in-out;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+        margin-right: auto;
+
+
+        &:before, &:after {
+            content: '';
+            display: block;
+            width: 80%;
+            height: 3px;
+            position: absolute;
+            background: black;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 4px;
+        }
+
+        &:after {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+    }
+
+    .image,
+    .image-alternative {
+        border: $border solid white;
+        overflow: hidden;
+        border-radius: 50%;
+        width: $imageSize - ($border * 2);
+        height: $imageSize - ($border * 2);
+        display: block;
+        line-height: $imageSize - ($border * 2);
+        overflow: hidden;
+        transition: opacity .3s ease-in-out;
+        flex: 0 0 $imageSize - ($border * 2);
+    }
+
+    .image-alternative {
+        text-align: center;
+        font-size: 20px;
+        display: block;
+        color: white;
+        background-color: var(--color);
+        filter: contrast(100%);
+
+        span {
+            mix-blend-mode: difference;
+        }
+    }
+
+    .zoom {
+        width: 50px;
+        height: 50px;
+        border: 10px solid transparent;
+        appearance: none;
+        background: url('/zoom.svg') no-repeat center;
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        cursor: zoom-in;
+        transition: opacity .3s ease-in-out;
+    }
+
+    &.active {
+        .action-button {
+            &:before {
+                width: 100%;
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+
+            &:after {
+                width: 100%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+            }
+        }
+    }
+
+    &:hover {
+        .zoom {
+            opacity: 1;
+        }
+
+        .image-alternative,
+        .image {
+            opacity: .2;
+        }
+
+        .action-button {
+            opacity: 1;
+        }
+    }
+}
+
+.is-loading .person {
+    .name {
+        opacity: 0;
+    }
+}

@@ -55,7 +55,7 @@ const search = async (event) => {
 export const searchForm = () => {
     return html`
         <form class="search-form" onsubmit=${(e) => e.preventDefault()}>
-            <label>Please search for a person</label>
+            <label>Please search for a philosopher or influential thinker</label>
             <input onkeyup=${debounce(search, 500)} type="search" class="search-input">
 
             ${suggestions.map(suggestion => html`
