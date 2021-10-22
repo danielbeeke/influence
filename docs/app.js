@@ -154,7 +154,7 @@ Url: `+this._getEventFilterUrl(t)),!0)},e.prototype._isSentryError=function(t,r)
 
                 <a class="name" href=${n?os(r):ss(e.id,r)}>
                     ${e.birth?k`<span class="dates">${e.birth.substr(0,4)} ${e.death?k` / ${e.death.substr(0,4)}`:null}</span>`:null}
-                    <span>${e.label}</span>
+                    <span class="text">${e.label}</span>
                 </a>
 
                 <span class="action-button"></span>

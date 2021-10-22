@@ -94,7 +94,7 @@ const personTemplate = (person: Person, index: number = 0, columnIndex: number) 
 
                 <a class="name" href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)}>
                     ${person.birth ? html`<span class="dates">${person.birth.substr(0, 4)} ${person.death ? html` / ${person.death.substr(0, 4)}` : null}</span>` : null}
-                    <span>${person.label}</span>
+                    <span class="text">${person.label}</span>
                 </a>
 
                 <span class="action-button"></span>

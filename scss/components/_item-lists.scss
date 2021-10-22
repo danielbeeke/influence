@@ -7,16 +7,21 @@
     width: 300px;
     list-style: none;
     animation: fadeIn .4s ease-in-out .6s 1 both;
+
+    h3 {
+        margin-bottom: 6px;
+    }
 }
 
 .item {
-    text-decoration: none;
+    // text-decoration: none;
     color: rgb(49, 49, 49);
+
 }
 
 .item-lists {
     position: absolute;
-    top: 130px;
-    max-height: calc(100vh - 130px);
+    top: 140px;
+    max-height: calc(100vh - 140px);
     overflow: auto;
 }

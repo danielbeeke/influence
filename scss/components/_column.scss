@@ -3,11 +3,16 @@
     display: flex;
     flex-direction: column;
     max-width: 320px;
-    position: sticky;
+    position: relative;
     left: 0;
     flex: 0 0 320px;
+    background: white;
     overflow: hidden;
-    border-left: 1px dashed rgb(180, 180, 180);
+
+    &:not(:first-child) {
+        border-left: 1px dashed rgb(180, 180, 180);
+    }
+
     animation: createColumn .4s ease-in-out .6s 1 both;
 
     &.selected {
