@@ -1,10 +1,12 @@
 .item-list {
-    padding: 0;
+    padding-inline: 20px;
     overflow-y: auto;
     margin-right: 20px;
     font-size: 12px;
     line-height: 18px;
-    max-width: 300px;
+    width: 300px;
+    list-style: none;
+    animation: fadeIn .4s ease-in-out .6s 1 both;
 }
 
 .item {
@@ -14,6 +16,7 @@
 
 .item-lists {
     position: absolute;
-    max-height: calc(50vh - 140px);
-    top: 170px;
+    top: 130px;
+    max-height: calc(100vh - 130px);
+    overflow: auto;
 }

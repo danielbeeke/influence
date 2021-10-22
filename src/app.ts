@@ -21,8 +21,34 @@ document.body.addEventListener('click', (event: Event) => {
       if (href && href[0] === '/') {
         event.preventDefault()
         setTimeout(() => {
-            history.pushState(null, null, href)
-            drawApp()
+
+            const isActive = element.closest('.person')?.classList.contains('active')
+            const isPerson = element.closest('.person')?.classList.contains('person')
+
+            if (isPerson && isActive) {
+                const columns = [...document.querySelectorAll('.column')]
+                const clickedIndex = columns.indexOf(element.closest('.column'))
+                
+                if (clickedIndex === 1) {
+                    history.pushState(null, null, href)
+                    drawApp() 
+                }
+                else {
+                    for (const [index, column] of columns.entries()) {
+                        if (index > clickedIndex) {
+                            column.addEventListener('animationend', () => {
+                                history.pushState(null, null, href)
+                                drawApp()    
+                            }, { once: true })
+                            column.classList.add('prepare-removal')
+                        }
+                    }    
+                }
+            }
+            else {
+                history.pushState(null, null, href)
+                drawApp()    
+            }
         })
       }
     }
@@ -87,11 +113,6 @@ const hasActivePerson = (search: string, columnIndex: number) => {
     return ids[columnIndex] === search
 }
 
-const onscroll = (event) => {
-    const inner = event.target.querySelector('.inner')
-    inner.style = `--scroll: ${event.target.scrollTop}px; --half: ${event.target.clientHeight / 2}px`
-}
-
 const columns = []
 export let suggestions = []
 
@@ -129,6 +150,10 @@ const showInterests = async (person) => {
     ` : null
 }
 
+const state = new Map()
+export const getState = (object, defaults) => {
+  return state.has(object) ? state.get(object) : state.set(object, defaults) && state.get(object)
+}
 
 const showIdeas = async (person) => {
     const ideas = await getNotableIdeas(person.id) as Array<{ label: string, date: string, cleanedDate: number, id: string }>
@@ -141,28 +166,107 @@ const showIdeas = async (person) => {
     ` : null
 }
 
-const createColumn = async (id, peopleGetter: Function, columnIndex: number) => {
+function waitForScrollEnd (element = window) {
+    let last_changed_frame = 0
+    let last_x = element.scrollX
+    let last_y = element.scrollY
 
-    const people: Array<Person> = await peopleGetter(id)
-    const activePerson = people.find(person => hasActivePerson(person.id, columnIndex))
+    return new Promise( resolve => {
+        function tick(frames) {
+            // We requestAnimationFrame either for 500 frames or until 20 frames with
+            // no change have been observed.
+            if (frames >= 500 || frames - last_changed_frame > 20) {
+                resolve(null)
+            } else {
+                if (element.scrollX != last_x || element.scrollY != last_y) {
+                    last_changed_frame = frames
+                    last_x = element.scrollX
+                    last_y = element.scrollY
+                }
+                requestAnimationFrame(tick.bind(null, frames + 1))
+            }
+        }
+        tick(0)
+    })
+}
+
+
+const createColumn = async (id, peopleGetter: Function, columnIndex: number, title) => {
+
+    const state = getState(id + ':' + columnIndex, {
+        people: [],
+        isLoading: true
+    })
+
+    if (state.isLoading) {
+        setTimeout(() => {
+            peopleGetter(id).then(people => {
+                state.people = people
+                state.isLoading = false
+                drawApp()
+            })        
+        })
+    }
+    
+    const activePerson = state.people.find(person => hasActivePerson(person.id, columnIndex))
 
     return html`
-    <div ref=${element => columns.push(element)} onscroll=${onscroll} style=${`--count: ${people.length}`} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
-        <div class="inner" style=${`--scroll: 0px; --half: ${Math.min((people.length * 55) + 40, window.innerHeight - 40) / 2}px`}>
-            ${people.map((person, index) => personTemplate(person, index, columnIndex))}
+    <div ref=${element => columns.push(element)} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
+        <h3 class="column-title">${title}</h3>
+
+        <div class="inner">
+            ${state.people.map((person, index) => personTemplate(person, index, columnIndex))}
 
             <div class="scroll-maker"></div>
         </div>
 
+        ${activePerson ? html`
         <div class="item-lists">
-            ${activePerson ? showWorks(activePerson) : null}
-            ${activePerson ? showInterests(activePerson) : null}
-            ${activePerson ? showIdeas(activePerson) : null}
+            ${showWorks(activePerson)}
+            ${showInterests(activePerson)}
+            ${showIdeas(activePerson)}
         </div>
+        ` : null}
 
     </div>
     `
 }
+
+// Returns a function, that, when invoked, will only be triggered at most once
+// during a given window of time. Normally, the throttled function will run
+// as much as it can, without ever going more than once per `wait` duration;
+// but if you'd like to disable the execution on the leading edge, pass
+// `{leading: false}`. To disable execution on the trailing edge, ditto.
+export function throttle(func, wait, options = { leading: true, trailing: true }) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    var later = function() {
+      previous = options.leading === false ? 0 : Date.now();
+      timeout = null;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    };
+    return function() {
+      var now = Date.now();
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0 || remaining > wait) {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        previous = now;
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+  };
 
 const closePopup = () => {
     location.hash = ''
@@ -190,20 +294,17 @@ const columnsRender = async (ids) => {
         </div>        
         ` : null}
 
-        <div class="headers">
-            <h3 class="column-title">${`Influencers of ${(persons[0] as Person).label}`}</h3>
-            <h3 class="column-title selected">Your starting selection:</h3>
-            ${ids.map((id, index) => html`<h3 class="column-title">Influenced by ${(persons[index] as Person).label}</h3>`)}
-        </div>
         <div class="people">
-            ${createColumn(ids[0], getInfluencedBy, -1)}
-            ${createColumn(ids[0], () => [persons[0]], 0)}
-            ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1))}
+            ${createColumn(ids[0], getInfluencedBy, -1, `Influencers of ${(persons[0] as Person).label}`)}
+            ${createColumn(ids[0], async () => [persons[0]], 0, `Your starting selection:`)}
+            ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1, `Influenced by ${(persons[index] as Person).label}`))}
         </div>
     `
 }
 
-export const drawApp = async () => {
+const startTime = (new Date).getTime()
+
+export const drawApp = throttle(async () => {
     const ids = getIds()
 
     try {
@@ -218,11 +319,26 @@ export const drawApp = async () => {
         }
     }
 
-    for (const [index, column] of columns.entries()) {
-        column.classList.contains('active') ? disableScroll(column) : enableScroll(column)
-        setTimeout(() => column.classList.remove('is-loading'), 500)
-    }    
-}
+    if (ids.length) {
+        const runTime = (new Date).getTime() - startTime
+        for (const [index, column] of columns.entries()) {
+            if (column.classList.contains('active')) {
+                column.querySelector('.person.active').scrollIntoView({ behavior: runTime < 2000 ? 'auto' : 'smooth' })
+                waitForScrollEnd(column).then(() => {
+                    disableScroll(column)
+                })
+            }
+            else {
+                enableScroll(column)
+            }
+        }    
+    
+        setTimeout(() => {
+            columns.at(-1).scrollIntoView({ behavior: 'smooth' })    
 
-setTimeout(() => document.body.classList.remove('is-loading'), 800)
+        }, 1000)
+    
+    }
+}, 200)
+
 drawApp()

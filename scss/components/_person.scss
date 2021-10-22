@@ -11,6 +11,8 @@ $border: 3px;
     align-items: center;
     text-decoration: none;
     cursor: default;
+    margin-bottom: -15px;
+    z-index: var(--index);
 
     .dates {
         font-size: 10px;
@@ -20,14 +22,14 @@ $border: 3px;
     &:before {
         border-radius: 50%;
         z-index: -1;
-        width: $imageSize;
-        height: $imageSize;
         display: block;
         background: white;
         position: absolute;
         left: 0;
         content: '';
         top: 0;
+        width: 68px;
+        height: 68px;
     }
 
     .name {
@@ -41,7 +43,7 @@ $border: 3px;
         flex-direction: column;
         transition: opacity .3s ease-in-out;
         opacity: 1;
-        padding-right: 45px;
+        padding-right: 25px;
         position: relative;
         max-width: 100%;
         text-overflow: ellipsis;
@@ -69,7 +71,7 @@ $border: 3px;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        right: 20px;
+        right: 0;
         margin-right: auto;
 
 
@@ -134,6 +136,8 @@ $border: 3px;
     }
 
     &.active {
+        // animation: fadeIn .4s ease-in-out .6s 1 both;
+
         .action-button {
             &:before {
                 width: 100%;
@@ -160,11 +164,5 @@ $border: 3px;
         .action-button {
             opacity: 1;
         }
-    }
-}
-
-.is-loading .person {
-    .name {
-        opacity: 0;
     }
 }

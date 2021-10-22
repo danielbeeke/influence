@@ -1,7 +1,8 @@
 .people {
     display: flex;
-    height: calc(100% - 54px);
-    align-content: center;
+    height: 100%;
+    min-width: 100vw;
+    width: max-content;
     justify-content: safe center;
 }
 

@@ -9,7 +9,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
-    z-index: 30;
+    z-index: 230;
     box-shadow: 0 5px 10px rgba(black, .3);
 
     .image {
@@ -92,7 +92,7 @@ body {
         opacity: 0;
         pointer-events: none;
         transform: translate(-50%, -50%);
-        z-index: 20;
+        z-index: 200;
     }
 }
 

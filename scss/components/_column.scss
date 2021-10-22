@@ -1,54 +1,59 @@
 .column {
     scroll-snap-align: start;
     display: flex;
-    justify-content: safe center;
     flex-direction: column;
-    max-height: 100%;
-    overflow-y: auto;
-    scrollbar-width: none;
-    width: 320px;
+    max-width: 320px;
+    position: sticky;
+    left: 0;
     flex: 0 0 320px;
+    overflow: hidden;
     border-left: 1px dashed rgb(180, 180, 180);
-    padding-inline-start: 20px;
-    padding-block: 40px;
-    
-    &::-webkit-scrollbar {
-        display: none;
-    }
+    animation: createColumn .4s ease-in-out .6s 1 both;
 
     &.selected {
         background: rgb(243, 243, 255);
+        z-index: 100;
+    }
+
+    .scroll-maker {
+        width: 10px;
+        height: 0;
+        transition: height .4s .4s ease-in-out;
+    }
+
+    &.active {
+        .scroll-maker {
+            height: 100vh;
+            transition: height 0s 0s ease-in-out;
+        }
     }
 
     > .inner {
-        height: calc(var(--count) * #{$imageSize - 20px});
+        flex: 1 1 auto;
+        padding: 20px;
+        scroll-padding: 20px;
         position: relative;
+        overflow-y: auto;
+        scrollbar-width: none;
+        width: 320px;
 
-        .scroll-maker {
-            height: calc(var(--count) * #{$imageSize - 20px} + 60px);
-            width: 10px;
-            position: absolute;
-            top: 0;
-            pointer-events: none;
+        &::-webkit-scrollbar {
+            display: none;
         }
-
+    
         > .person {
-            transition: transform .3s .3s ease-in-out, opacity .3s calc(.6s + .02s * var(--index)) ease-in-out;
-            top: 50%; 
-            position: absolute;
-            transform: 
-            translateY(calc(var(--index) * #{$imageSize} + -20px * var(--index) - var(--half) + 40px));
+            transition: transform .3s .3s ease-in-out, opacity .3s ease-in-out;
         }
     }
 
     &.active {
         .inner {
             .person {
-                transform: translateY(calc((-50vh  + var(--scroll) + 60px)));
                 transition: transform .3s .3s ease-in-out, opacity .3s 0s ease-in-out;
     
                 &:not(.active) {
                     opacity: 0;
+                    pointer-events: none;
                 }
     
                 &.active {
@@ -58,4 +63,19 @@
             }
         }    
     }
+
+    &.prepare-removal {
+        animation: removeColumn .4s ease-in-out .6s 1 both;
+    }
+}
+
+
+@keyframes createColumn {
+    0% { opacity: 0; max-width: 0; }
+    100% { opacity: 1; max-width: 320px; }
+}
+
+@keyframes removeColumn {
+    0% { opacity: 1; max-width: 320px; }
+    100% { opacity: 0; max-width: 0; }
 }
