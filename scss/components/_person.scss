@@ -117,7 +117,7 @@ $border: 3px;
         width: $imageSize - ($border * 2);
         height: $imageSize - ($border * 2);
         display: block;
-        line-height: $imageSize - ($border * 2);
+        line-height: 66px;
         overflow: hidden;
         transition: opacity .3s ease-in-out;
         flex: 0 0 $imageSize - ($border * 2);

@@ -55,7 +55,7 @@ const search = async (event) => {
 export const searchForm = () => {
     return html`
         <form class="search-form" onsubmit=${(e) => e.preventDefault()}>
-            <label>Please search for a philosopher or influential thinker</label>
+            <label>Search for a philosopher or an influential thinker</label>
             <input onkeyup=${debounce(search, 500)} type="search" class="search-input">
 
             ${suggestions.map(suggestion => html`
@@ -64,6 +64,12 @@ export const searchForm = () => {
                     <h3 class="title">${suggestion.label}</h3>
                 </div>
             `)}
+
+            ${!suggestions.length ? html`
+            <div class="hint">
+            You can try <a href="/Søren_Kierkegaard">Søren Kierkegaard</a> or <a href="/Plato">Plato</a>
+            </div>
+            ` : null }
 
         </form>
     `
