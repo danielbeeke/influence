@@ -16,7 +16,7 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
-const debouncedContinueColumnsRender = debounce(continueColumnsRender, 100)
+const debouncedContinueColumnsRender = debounce(continueColumnsRender, 700)
 
 export const drawApp = throttle(async () => {
     const ids = getIds()

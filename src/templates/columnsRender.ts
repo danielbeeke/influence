@@ -56,8 +56,6 @@ export const columnsRender = async (ids) => {
 
     document.body.dataset.selectedPerson = (!!selectedPerson).toString()
 
-    setTimeout(continueColumnsRender, 400)
-
     return html`
         ${selectedPerson ? html`
         <div class="selected-person">

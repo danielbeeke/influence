@@ -177,18 +177,20 @@ $border: 3px;
         }
     }
 
-    &:hover {
-        .zoom {
-            opacity: 1;
-        }
+    @media (hover: hover) {
+        &:hover {
+            .zoom {
+                opacity: 1;
+            }
 
-        .image-alternative,
-        .image {
-            opacity: .2;
-        }
+            .image-alternative,
+            .image {
+                opacity: .2;
+            }
 
-        .action-button {
-            opacity: 1;
+            .action-button {
+                opacity: 1;
+            }
         }
     }
 }

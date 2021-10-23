@@ -52,6 +52,8 @@ document.body.addEventListener('click', (event: Event) => {
         const isActive = element.closest('.person')?.classList.contains('active')
         const isPerson = element.closest('.person')?.classList.contains('person')
 
+        if (isPerson && !isActive) setTimeout(continueColumnsRender, 400)
+
         if (isPerson && isActive) {
             const columns = [...document.querySelectorAll('.column')]
             const clickedIndex = columns.indexOf(element.closest('.column'))
