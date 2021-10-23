@@ -2,33 +2,32 @@
 // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
 var keys = {37: 1, 38: 1, 39: 1, 40: 1};
 
-const directionMap = new Map()
-const elementMap = new Map()
-
-const preventDefault = (e) => {
-  const direction = elementMap.get(e.target)
-
+const preventDefaultCreator = (direction) => (e) => {
   if (!direction) {
-    e.preventDefault();
+    e.preventDefault()
     return
   }
 
-  const start = directionMap.get(e.target)
+  const xMovement = Math.abs(e.touches[0].clientX - e.target._startTouch.x)
+  const yMovement = Math.abs(e.touches[0].clientY - e.target._startTouch.y)
 
-  const a = e.touches[0]['client' + direction.toUpperCase()]
-  const b = start[direction]
-  const diff = Math.abs(a - b)
-
-  if (diff > 60) {
-    e.preventDefault();
+  if (
+    direction === 'y' && xMovement < yMovement * 3 ||
+    direction === 'x' && yMovement < xMovement * 3
+  ) {
+    if (e.cancelable) e.preventDefault()
   }
 }
 
+const preventDefaultX = preventDefaultCreator('x')
+const preventDefaultY = preventDefaultCreator('y')
+const preventDefault = preventDefaultCreator(null)
+
 function addDirectionHandler (e) {
-  directionMap.set(e.target, {
+  e.target._startTouch = {
     x: e.touches[0].clientX,
     y: e.touches[0].clientY
-  })
+  }
 }
 
 function preventDefaultForScrollKeys(e) {
@@ -51,19 +50,18 @@ var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewh
 
 // call this to Disable
 export function disableScroll(element, direction) {
-    elementMap.set(element, direction)
     element.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
     element.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-    element.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
+    element.addEventListener('touchmove', direction === 'x' ? preventDefaultX : preventDefaultY, wheelOpt); // mobile
     element.addEventListener('touchstart', addDirectionHandler, wheelOpt); // mobile
     element.addEventListener('keydown', preventDefaultForScrollKeys, false);
 }
 
 // call this to Enable
-export function enableScroll(element) {
+export function enableScroll(element, direction) {
     element.removeEventListener('DOMMouseScroll', preventDefault, false);
     element.removeEventListener(wheelEvent, preventDefault, wheelOpt); 
-    element.removeEventListener('touchmove', preventDefault, wheelOpt);
+    element.removeEventListener('touchmove', direction === 'x' ? preventDefaultX : preventDefaultY, wheelOpt);
     element.removeEventListener('touchstart', addDirectionHandler, wheelOpt); // mobile
     element.removeEventListener('keydown', preventDefaultForScrollKeys, false);
 }
