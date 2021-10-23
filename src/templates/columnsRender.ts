@@ -6,8 +6,7 @@ import { personTemplate } from './personTemplate';
 import { drawApp } from '../app';
 import { cleanDate } from '../helpers/cleanDate';
 import { getState } from '../helpers/getState';
-import { continueColumnsRender } from '../misc/bodyClick';
-import { debounce } from '../helpers/debounce';
+import { continueColumnsRender } from '../helpers/continueColumnsRender'
 
 const columns = []
 

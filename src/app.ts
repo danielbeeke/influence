@@ -4,7 +4,7 @@ import { throttle } from './helpers/throttle';
 import { getIds } from './helpers/getIds';
 import { columnsRender } from './templates/columnsRender';
 import './misc/bodyClick'
-import { continueColumnsRender } from './misc/bodyClick';
+import { continueColumnsRender } from './helpers/continueColumnsRender'
 
 import * as Sentry from "@sentry/browser";
 import { Integrations } from "@sentry/tracing";
