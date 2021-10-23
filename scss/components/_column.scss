@@ -1,5 +1,5 @@
 .column {
-    scroll-snap-align: start;
+    // scroll-snap-align: end;
     display: flex;
     flex-direction: column;
     max-width: 320px;
@@ -23,7 +23,7 @@
     .scroll-maker {
         width: 10px;
         height: 0;
-        transition: height .4s .4s ease-in-out;
+        transition: height .8s .2s ease-in-out;
     }
 
     &.active {

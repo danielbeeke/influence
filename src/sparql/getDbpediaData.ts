@@ -1,4 +1,4 @@
-import { Person } from "./types"
+import { Person } from "../types"
 
 const relationShip = (referType) => referType === 'person' ? `dbo:influenced|^dbo:influencedBy` : `dbo:influencedBy|^dbo:influenced`
 

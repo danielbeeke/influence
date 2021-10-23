@@ -1,16 +1,9 @@
 import { html } from 'https://cdn.skypack.dev/uhtml/async';
-import { debounce } from './debounce.js';
-import { thumbnailAlternative } from './thumbnailAlternative.js';
-import { updateSuggestions, drawApp, suggestions } from './app.js';
+import { debounce } from '../helpers/debounce.js';
+import { thumbnailAlternative } from '../helpers/thumbnailAlternative.js';
+import { drawApp } from '../app.js';
+import { lastPart } from '../helpers/lastPart.js';
 
-/**
- * Returns the last part of an RDF URI. (After the # or : or /)
- * @param uri 
- */
- export const lastPart = (uri) => {
-    const split = uri.split(/\/|#/)
-    return split.pop()
-  }
 
 const search = async (event) => {
     if (event.target.value.length < 4) return
@@ -50,6 +43,13 @@ const search = async (event) => {
     }))
 
     drawApp()
+}
+
+
+let suggestions = []
+
+const updateSuggestions = (newSuggestions) => {
+    suggestions = newSuggestions
 }
 
 export const searchForm = () => {

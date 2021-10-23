@@ -2,7 +2,7 @@ import { stringToColor } from './stringToColor.js'
 import { html } from 'https://cdn.skypack.dev/uhtml/async';
 import kv from 'https://cdn.skypack.dev/@jacobmarshall/kv';
 import { thumbnailUrl } from './thumbnailUrl.js'
-import { drawApp } from './app.js';
+import { drawApp } from '../app.js';
 const cache = kv('thumbnailAlternative')
 
 export const thumbnailAlternative = async (preferredImage: string, label: string) => {
