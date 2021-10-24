@@ -28,7 +28,8 @@ const addIdToUrl = (id: string, columnIndex: number) => {
 
 export const personTemplate = (person: Person, index: number = 0, columnIndex: number) => {    
     const isActive = hasActivePerson(person.id, columnIndex)
-    const influencePercentage = Math.round(person.influence / maxInfluence * 100)
+    const position = allInfluence.indexOf(parseInt(person.influence))
+    const influencePercentage = Math.round(100 / allInfluence.length * position)
 
     return html`
         <div 

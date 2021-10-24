@@ -8,6 +8,7 @@ import { cleanDate } from '../helpers/cleanDate';
 import { getState } from '../helpers/getState';
 import { continueColumnsRender } from '../helpers/continueColumnsRender'
 import { debounce } from '../helpers/debounce';
+import { unique } from '../helpers/unique'
 
 const columns = []
 
@@ -93,7 +94,10 @@ export const columnsRender = async (ids, skipBookmark = false) => {
         Promise.resolve([persons[0]]),
         ...ids.map(id => getInfluenced(id))
     ]).then(columnResults => {
-        allInfluence = columnResults.flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
+        allInfluence = columnResults
+            .flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
+            .sort((a, b) => a - b)
+            .filter(unique)
         maxInfluence = Math.max(...allInfluence)
     })
 
