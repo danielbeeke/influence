@@ -100,7 +100,6 @@ $border: 3px;
         width: 56px;
         height: 56px;
         display: block;
-        background: black;
         line-height: 56px;
         overflow: hidden;
         transition: opacity .3s ease-in-out;
@@ -110,7 +109,7 @@ $border: 3px;
     }
 
     .influence {
-        background: conic-gradient(rgb(63, 219, 63) calc(var(--percentage) * 3.6deg), rgb(207, 204, 204) 0);
+        background: conic-gradient(rgb(54, 184, 54) calc(var(--percentage) * 3.6deg), rgb(207, 204, 204) 0);
         width: 66px;
         height: 66px;
         position: absolute;
@@ -137,15 +136,15 @@ $border: 3px;
         border: 10px solid transparent;
         appearance: none;
         position: absolute;
-        background-size: 36px;
         transform: translateY(-50%);
         z-index: 29;
+        padding: 20px;
         cursor: pointer;
         transition: opacity .3s ease-in-out;
-
         background: url('/zoom-tablet.svg') no-repeat center;
-        top: 42px;
-        left: -5px;
+        background-size: 20px;
+        top: 30px;
+        left: -28px;
         width: 24px;
         height: 24px;
     }

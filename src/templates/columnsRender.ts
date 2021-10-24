@@ -95,7 +95,6 @@ export const columnsRender = async (ids, skipBookmark = false) => {
     ]).then(columnResults => {
         allInfluence = columnResults.flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
         maxInfluence = Math.max(...allInfluence)
-        drawApp()
     })
 
     return html`
