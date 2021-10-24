@@ -26,7 +26,28 @@
 
 .item-lists {
     position: absolute;
-    top: 140px;
-    max-height: calc(100vh - 140px);
+    top: 160px;
+    max-height: calc(100% - 160px);
     overflow: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .item-list:first-child {
+        margin-top: 0;
+
+        > h3 {
+            margin-top: 0;
+        }
+    }
+}
+
+.column:not(.selected) .item-lists {
+    @include scrollBox(white);
+}
+
+.column.selected .item-lists {
+    @include scrollBox(rgb(243, 243, 255));
 }

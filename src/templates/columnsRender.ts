@@ -7,6 +7,7 @@ import { drawApp } from '../app';
 import { cleanDate } from '../helpers/cleanDate';
 import { getState } from '../helpers/getState';
 import { continueColumnsRender } from '../helpers/continueColumnsRender'
+import { debounce } from '../helpers/debounce';
 
 const columns = []
 
@@ -74,6 +75,31 @@ export const columnsRender = async (ids) => {
     `
 }
 
+const activeColumns = new Map()
+const activateColumnSearch = async (index: number, input) => {
+    activeColumns.set(index, true)
+    await drawApp()
+    input.focus()
+}
+
+const deactivateColumnSearch = (columnIndex: number, input = null) => {
+    activeColumns.set(columnIndex, false)
+    columnSearches.set(columnIndex, '')
+    if (input) input.value = ''
+    drawApp()
+}
+
+const columnSearches = new Map()
+
+const onColumnSearch = debounce((event, columnIndex) => {
+    columnSearches.set(columnIndex, event.target.value)
+    drawApp()
+}, 100)
+
+const onColumnBlur = (event, columnIndex) => {
+    if (!event.target.value) deactivateColumnSearch(columnIndex)
+}
+
 const createColumn = async (id, peopleGetter: Function, columnIndex: number, title) => {
 
     const state = getState(id + ':' + columnIndex, {
@@ -91,18 +117,29 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number, tit
     
     const activePerson = state.people.find(person => hasActivePerson(person.id, columnIndex))
 
+    let input 
+
+    const currentSearch = columnSearches.get(columnIndex)?.toLowerCase()
+
     return html`
     <div ref=${element => columns.push(element)} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
-        <h3 class="column-title">${title}</h3>
+        <h3 class=${`column-title ${activeColumns.get(columnIndex) ? 'active-search' : ''}`}>
+            ${title}
+            <input placeholder="Filter" onblur=${(event => onColumnBlur(event, columnIndex))} onkeyup=${(event => onColumnSearch(event, columnIndex))} ref=${element => input = element} type="search" class="search-field">
+            <button onclick=${() => activateColumnSearch(columnIndex, input)} class="do-search-icon"></button>
+            <button onclick=${() => deactivateColumnSearch(columnIndex, input)} class="close-search-icon"></button>
+        </h3>
 
         <div class="inner">
-            ${state.people.map((person, index) => personTemplate(person, index, columnIndex))}
+            ${state.people
+                .filter(person => currentSearch ? person.label.toLowerCase().includes(currentSearch) : true)
+                .map((person, index) => personTemplate(person, index, columnIndex))}
 
             <div class="scroll-maker"></div>
         </div>
 
         ${activePerson ? html`
-        <div class="item-lists">
+        <div class="item-lists scroll-box">
             ${showWorks(activePerson)}
             ${showInterests(activePerson)}
             ${showIdeas(activePerson)}

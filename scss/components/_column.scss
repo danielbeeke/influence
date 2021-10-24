@@ -8,12 +8,24 @@
     flex: 0 0 320px;
     background: white;
     overflow: hidden;
+    animation: createColumn .4s ease-in-out .6s 1 both;
 
     &:not(:first-child) {
         border-left: 1px dashed rgb(180, 180, 180);
     }
 
-    animation: createColumn .4s ease-in-out .6s 1 both;
+
+    &:not(.active) {
+        &.selected {
+            > .inner {
+                @include scrollBox(rgb(243, 243, 255));
+            }
+        }
+    
+        &:not(.selected) > .inner {
+            @include scrollBox(white);
+        }    
+    }
 
     &.selected {
         background: rgb(243, 243, 255);

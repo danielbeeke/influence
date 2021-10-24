@@ -9,8 +9,6 @@ export const continueColumnsRender = async () => {
 
     if (!columns.length) return
 
-    const lastColumn = columns.at(-1)
-
     const waiters = []
     const runTime = (new Date).getTime() - startTime
 
