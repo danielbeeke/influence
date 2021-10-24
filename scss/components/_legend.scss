@@ -1,0 +1,29 @@
+.legend {
+    bottom: 90px;
+    right: 20px;
+    position: fixed;
+    font-size: 12px;
+    text-align: right;
+    display: block;
+    z-index: 120;
+    width: 240px;
+
+    .text {
+        box-shadow: 5px 0 0 white, -5px 0 0 white;
+        box-decoration-break: clone;
+        background: white;
+        margin-right: 20px;
+        padding: 2px;
+        border-radius: 3px;
+    }
+
+    .block {
+        top: 0;
+        background: rgb(99, 59, 163);
+        height: 30px;
+        border-radius: 3px;
+        width: 10px;
+        position: absolute;
+        right: 0;
+    }
+}

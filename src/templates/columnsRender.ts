@@ -116,6 +116,11 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1, `Influenced by ${(persons[index] as Person).label}`))}
         </div>
 
+        <div class="legend">
+            <span class="text">Influence of person<br>relative to all others shown</span>
+            <div class="block"></div>
+        </div>
+
         <a class="fixed-button restart-button" href="/">
             <div class="icon"></div>
         </a>
