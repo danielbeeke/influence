@@ -46,7 +46,32 @@ const showInterests = async (person) => {
     ` : null
 }
 
-export const columnsRender = async (ids) => {
+
+let bookmarkState = ''
+
+const saveToHomepage = async () => {
+    let savedUrls = localStorage.saved ? JSON.parse(localStorage.saved) : []
+    let innerBookmarkState = !savedUrls.includes(location.pathname) ? 'default' : 'bookmarked'
+
+    if (innerBookmarkState === 'bookmarked') {
+        savedUrls = savedUrls.filter(item => item !== location.pathname)
+        bookmarkState = 'bookmark-removed'
+    }
+    else {
+        savedUrls.push(location.pathname)
+        bookmarkState = 'bookmark-added'
+    }
+
+    localStorage.saved = JSON.stringify(savedUrls)
+    await drawApp()
+    setTimeout(() => {
+        bookmarkState = !savedUrls.includes(location.pathname) ? 'default' : 'bookmarked'
+        drawApp()
+    }, 1500)    
+
+}
+
+export const columnsRender = async (ids, skipBookmark = false) => {
     const persons = await Promise.all(ids.map(id => getPerson(id)))
     let selectedPerson = null
     if (location.hash) {
@@ -56,6 +81,11 @@ export const columnsRender = async (ids) => {
 
     document.body.dataset.selectedPerson = (!!selectedPerson).toString()
 
+    if (!bookmarkState.includes('-')) {
+        let savedUrls = localStorage.saved ? JSON.parse(localStorage.saved) : []
+        bookmarkState = !savedUrls.includes(location.pathname) ? 'default' : 'bookmarked'    
+    }
+   
     return html`
         ${selectedPerson ? html`
         <div class="selected-person">
@@ -72,6 +102,16 @@ export const columnsRender = async (ids) => {
             ${createColumn(ids[0], async () => [persons[0]], 0, `Your starting selection:`)}
             ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1, `Influenced by ${(persons[index] as Person).label}`))}
         </div>
+
+        <a class="fixed-button restart-button" href="/">
+            <div class="icon"></div>
+        </a>
+
+        <button data-state=${bookmarkState} class="fixed-button bookmark-button" onclick=${saveToHomepage}>
+            <span class="text removed">Bookmark removed</span>
+            <span class="text added">Bookmark added to home</span>
+            <div class="icon"></div>
+        </button>
     `
 }
 

@@ -1,0 +1,90 @@
+.bookmark-button {
+    right: 80px;
+
+    .text {
+        font-size: 16px;
+        overflow: hidden;
+        flex: 0 0 auto;
+        max-width: 0;
+        transition: all .3s ease-in-out;
+        margin-right: 0;
+    }
+
+    .icon {
+        width: 30px;
+        height: 30px;
+        background: no-repeat center center;
+    }
+
+    &[data-state="default"] .icon {
+        background-image: url('./bookmark_border.svg');
+    }
+
+    &[data-state="default"]:hover .icon {
+        background-image: url('./bookmark_add.svg');
+    }
+
+
+    &[data-state="bookmark-added"] .icon {
+        background-image: url('./bookmark_added.svg');
+    }
+
+    &[data-state="bookmarked"] .icon {
+        background-image: url('./bookmark.svg');
+    }
+
+    &[data-state="bookmarked"]:hover .icon {
+        background-image: url('./bookmark_remove.svg');
+    }
+
+    &[data-state="bookmark-removed"] .icon {
+        background-image: url('./bookmark_border.svg');
+    }
+
+    &[data-state="bookmark-removed"] {
+        .text.removed {
+            max-width: 300px;
+            margin-right: 6px;
+            margin-left: 10px;
+        }
+    }
+
+    &[data-state="bookmark-added"] {
+        .text.added {
+            max-width: 300px;
+            margin-right: 6px;
+            margin-left: 10px;
+        }
+    }
+}
+
+.bookmark-list {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+
+    li {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.bookmark {
+    color: black;
+}
+
+.saved-bookmarks {
+    margin-top: 100px;
+
+    .title {
+        text-align: center;
+    }
+}
+
+.remove-bookmark {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}

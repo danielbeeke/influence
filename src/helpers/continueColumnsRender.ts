@@ -4,7 +4,7 @@ import { waitForScrollEnd } from '../helpers/waitForScrollEnd';
 let runningScroll = false
 
 const startTime = (new Date).getTime()
-export const continueColumnsRender = async () => {
+export const continueColumnsRender = async (forceDirectRender = false) => {
     const columns = [...document.querySelectorAll('.column')]
 
     if (!columns.length) return
@@ -17,7 +17,9 @@ export const continueColumnsRender = async () => {
         if (activePerson) {
             const top = (activePerson as HTMLElement).offsetTop - 20
             const inner = column.querySelector('.inner')
-            inner.scrollTo({ top: top, behavior: runTime < 2000 ? 'auto' : 'smooth' })
+            let behavior = runTime < 2000 ? 'auto' : 'smooth'
+            if (forceDirectRender) behavior = 'auto'
+            inner.scrollTo({ top: top, behavior: behavior })
             waiters.push(waitForScrollEnd((inner as HTMLElement)).then(() => {
                 disableScroll(column.querySelector('.inner'), 'y')
             }))

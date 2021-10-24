@@ -28,18 +28,33 @@ if ('serviceWorker' in navigator) {
 
 const debouncedContinueColumnsRender = debounce(continueColumnsRender, 700)
 
+let previousRoute = ''
+
+const routes = {
+  columns: () => {
+    const ids = getIds()
+    return columnsRender(ids)
+  },
+  search: () => searchForm()
+}
+
 export const drawApp = throttle(async () => {
     const ids = getIds()
+    const routeName = ids.length ? 'columns' : 'search'
 
     try {
-        await render(document.body, ids.length ? columnsRender(ids) : searchForm())
+        await render(document.body, routes[routeName]())
+        if (previousRoute !== routeName) setTimeout(() => {
+          continueColumnsRender(true)
+        }, 700)
+        previousRoute = routeName
     }
     catch (exception) {
         if (exception.message === 'NetworkError when attempting to fetch resource.') {
             render(document.body, html`<h1 class="dbpedia-offline">Unfortunatly DBpedia is down.<br>Please come back later.</h1>`)
         }
         else {
-            console.info(exception.message)
+            console.info(exception)
         }
     }
 
