@@ -3,7 +3,7 @@ import { hasActivePerson } from '../helpers/hasActivePerson'
 import { html } from 'https://cdn.skypack.dev/uhtml/async';
 import { thumbnailAlternative } from '../helpers/thumbnailAlternative';
 import { drawApp } from '../app';
-import { maxInfluence, allInfluence } from './columnsRender';
+import { allInfluence } from './columnsRender';
 
 const removeIdFromUrl = (columnIndex: number) => {
     let parts = location.pathname.substr(1).split(',')

@@ -72,7 +72,6 @@ const saveToHomepage = async () => {
 
 }
 
-export let maxInfluence = 0
 export let allInfluence = []
 export const columnsRender = async (ids, skipBookmark = false) => {
     const persons = await Promise.all(ids.map(id => getPerson(id)))
@@ -98,7 +97,6 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             .flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
             .sort((a, b) => a - b)
             .filter(unique)
-        maxInfluence = Math.max(...allInfluence)
     })
 
     return html`

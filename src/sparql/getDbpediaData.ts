@@ -27,8 +27,7 @@ const personQuery = (identifier:string , langCode: string) => `
         BIND (COALESCE(?deathDate, ?deathYear) as ?death)
         BIND (COALESCE(?birthDate, ?birthYear, ?activeYearsStartYear, ?activeYearsStartYearProperty) as ?birth)
 
-        ?person dbo:influenced|^dbo:influencedBy ?influenced .
-
+        OPTIONAL { ?person dbo:influenced|^dbo:influencedBy ?influenced }
 
         OPTIONAL {<http://dbpedia.org/resource/${identifier}> foaf:depiction ?image }
         FILTER (lang(?label) = '${langCode}')
