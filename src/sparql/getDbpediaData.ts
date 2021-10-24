@@ -6,7 +6,7 @@ const personQuery = (identifier:string , langCode: string) => `
     PREFIX dbo: <http://dbpedia.org/ontology/>
     PREFIX dbr: <http://dbpedia.org/resource/>
 
-    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ?abstract ?birth ?death
+    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ?abstract ?birth ?death (count(DISTINCT ?influenced) as ?influence)
     WHERE {
         <http://dbpedia.org/resource/${identifier}> rdfs:label ?label .
 
@@ -26,6 +26,9 @@ const personQuery = (identifier:string , langCode: string) => `
 
         BIND (COALESCE(?deathDate, ?deathYear) as ?death)
         BIND (COALESCE(?birthDate, ?birthYear, ?activeYearsStartYear, ?activeYearsStartYearProperty) as ?birth)
+
+        ?person dbo:influenced|^dbo:influencedBy ?influenced .
+
 
         OPTIONAL {<http://dbpedia.org/resource/${identifier}> foaf:depiction ?image }
         FILTER (lang(?label) = '${langCode}')
@@ -82,7 +85,7 @@ const influenceQuery = (identifier: string, referType: 'person' | 'others', lang
     PREFIX dbp: <http://dbpedia.org/property/>
     PREFIX dbr: <http://dbpedia.org/resource/>
 
-    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ?birth ?death
+    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ?birth ?death (count(DISTINCT ?influenced) as ?influence)
     WHERE {
         ?person rdfs:label ?label .
         { SELECT DISTINCT ?person { <http://dbpedia.org/resource/${identifier}> ${relationShip(referType)} ?person . }}
@@ -101,11 +104,15 @@ const influenceQuery = (identifier: string, referType: 'person' | 'others', lang
         BIND (COALESCE(?deathDate, ?deathYear) as ?death)
         BIND (COALESCE(?birthDate, ?birthYear, ?activeYearsStartYear, ?activeYearsStartYearProperty) as ?birth)
 
+        ?person dbo:influenced|^dbo:influencedBy ?influenced .
+
         FILTER isIRI(?person) 
         FILTER exists { ?person a schema:Person }
+        FILTER exists { ?influenced a schema:Person }
+
         FILTER (lang(?label) = '${langCode}')
     }
-    ORDER BY ASC(?birth)
+    ORDER BY DESC(?influence)
 
     LIMIT 1000
 `
@@ -115,9 +122,14 @@ const fetchQuery = async (query) => {
 
     if (!result) {
         const cleanedQuery = query.replaceAll('\n', ' ')
-        const response = await fetch(`https://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=${cleanedQuery}&format=application/json-ld`)
-        result = await response.json()    
-        staticCache.set(query, result)
+        const promise = fetch(`https://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=${cleanedQuery}&format=application/json-ld`)
+        .then(response => response.json())
+        .then(result => {
+            staticCache.set(query, result)
+            return result
+        })
+
+        return promise
     }
 
     return result

@@ -71,6 +71,8 @@ const saveToHomepage = async () => {
 
 }
 
+export let maxInfluence = 0
+export let allInfluence = []
 export const columnsRender = async (ids, skipBookmark = false) => {
     const persons = await Promise.all(ids.map(id => getPerson(id)))
     let selectedPerson = null
@@ -86,6 +88,16 @@ export const columnsRender = async (ids, skipBookmark = false) => {
         bookmarkState = !savedUrls.includes(location.pathname) ? 'default' : 'bookmarked'    
     }
    
+    Promise.all([
+        getInfluencedBy(ids[0]),
+        Promise.resolve([persons[0]]),
+        ...ids.map(id => getInfluenced(id))
+    ]).then(columnResults => {
+        allInfluence = columnResults.flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
+        maxInfluence = Math.max(...allInfluence)
+        drawApp()
+    })
+
     return html`
         ${selectedPerson ? html`
         <div class="selected-person">

@@ -1,1 +1,1 @@
-export type Person = { id: string, image?: string, label: string, birth: string, death: string }
+export type Person = { id: string, image?: string, label: string, birth: string, death: string, influence: number }
