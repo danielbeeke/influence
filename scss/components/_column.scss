@@ -1,5 +1,7 @@
 .column {
-    // scroll-snap-align: end;
+    @media (hover: none) {
+        scroll-snap-align: start end;
+    }
     display: flex;
     flex-direction: column;
     max-width: 320px;

@@ -10,11 +10,13 @@ body {
     flex-direction: column;
     display: flex;
     transition: opacity .5s ease-in-out;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+    @media (hover: none) {
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
 
-    &::-webkit-scrollbar {
-        display: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }
 

@@ -16,8 +16,9 @@ export const continueColumnsRender = async () => {
         const activePerson = column.querySelector('.person.active')
         if (activePerson) {
             const top = (activePerson as HTMLElement).offsetTop - 20
-            column.querySelector('.inner').scrollTo({ top: top, behavior: runTime < 2000 ? 'auto' : 'smooth' })
-            waiters.push(waitForScrollEnd((column as HTMLElement)).then(() => {
+            const inner = column.querySelector('.inner')
+            inner.scrollTo({ top: top, behavior: runTime < 2000 ? 'auto' : 'smooth' })
+            waiters.push(waitForScrollEnd((inner as HTMLElement)).then(() => {
                 disableScroll(column.querySelector('.inner'), 'y')
             }))
         }
