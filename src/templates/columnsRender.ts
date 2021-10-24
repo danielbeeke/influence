@@ -82,7 +82,7 @@ const activateColumnSearch = async (index: number, input) => {
     input.focus()
 }
 
-const deactivateColumnSearch = (columnIndex: number, input = null) => {
+export const deactivateColumnSearch = (columnIndex: number, input = null) => {
     activeColumns.set(columnIndex, false)
     columnSearches.set(columnIndex, '')
     if (input) input.value = ''
@@ -125,7 +125,7 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number, tit
     <div ref=${element => columns.push(element)} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
         <h3 class=${`column-title ${activeColumns.get(columnIndex) ? 'active-search' : ''}`}>
             ${title}
-            <input placeholder="Filter" onblur=${(event => onColumnBlur(event, columnIndex))} onkeyup=${(event => onColumnSearch(event, columnIndex))} ref=${element => input = element} type="search" class="search-field">
+            <input .value=${columnSearches.get(columnIndex) ?? ''} placeholder="Filter" onblur=${(event => onColumnBlur(event, columnIndex))} onkeyup=${(event => onColumnSearch(event, columnIndex))} ref=${element => input = element} type="search" class="search-field">
             <button onclick=${() => activateColumnSearch(columnIndex, input)} class="do-search-icon"></button>
             <button onclick=${() => deactivateColumnSearch(columnIndex, input)} class="close-search-icon"></button>
         </h3>

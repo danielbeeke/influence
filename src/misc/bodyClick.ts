@@ -1,5 +1,6 @@
 import { drawApp } from '../app'
 import { continueColumnsRender } from '../helpers/continueColumnsRender'
+import { deactivateColumnSearch } from '../templates/columnsRender'
 
 document.body.addEventListener('click', (event: Event) => {
     const element = (event as any).target.nodeName !== 'A' ? (event as any).target.closest('a') : (event as any).target
@@ -11,9 +12,9 @@ document.body.addEventListener('click', (event: Event) => {
         const isPerson = element.closest('.person')?.classList.contains('person')
 
         if (isPerson && !isActive) setTimeout(continueColumnsRender, 400)
+        const columns = [...document.querySelectorAll('.column')]
 
         if (isPerson && isActive) {
-            const columns = [...document.querySelectorAll('.column')]
             const clickedIndex = columns.indexOf(element.closest('.column'))
             
             if (clickedIndex === 1) {
@@ -26,6 +27,7 @@ document.body.addEventListener('click', (event: Event) => {
                         column.addEventListener('animationend', async () => {
                             history.pushState(null, null, href)
                             await drawApp()
+                            deactivateColumnSearch(index - 1)
                             continueColumnsRender()
                         }, { once: true })
                         column.classList.add('prepare-removal')
@@ -35,7 +37,7 @@ document.body.addEventListener('click', (event: Event) => {
         }
         else {
             history.pushState(null, null, href)
-            drawApp()   
+            drawApp()
         }
       }
     }
