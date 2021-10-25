@@ -11,8 +11,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     background: white;
-    width: 320px;
-    max-width: 320px;
+    width: 100%;
     padding-inline: 20px;
     border-bottom: 1px dashed rgb(180, 180, 180);
 
@@ -125,5 +124,11 @@
             max-width: 0;
             opacity: 0;
         }
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .column-title {
+        max-width: 320px;
     }
 }
