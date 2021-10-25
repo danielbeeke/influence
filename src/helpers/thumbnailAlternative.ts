@@ -19,7 +19,7 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     }
 
     if (image === undefined) {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&titles=${label}&prop=pageimages&format=json&pithumbsize=${size}`
+        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&titles=${label}&prop=pageimages&format=json&pithumbsize=${size * 3}`
         const response = await fetch(url, {
             method: 'GET'
         })
