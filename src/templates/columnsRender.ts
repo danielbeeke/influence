@@ -117,7 +117,8 @@ export const columnsRender = async (ids, skipBookmark = false) => {
         </div>
 
         <div class="legend">
-            <span class="text">Influence of person<br>relative to all others shown</span>
+        <span class="text mobile">Relative influence</span>
+        <span class="text desktop">Influence of person<br>relative to all others shown</span>
             <div class="block"></div>
         </div>
 

@@ -20,21 +20,12 @@
         background-image: url('./bookmark_border.svg');
     }
 
-    &[data-state="default"]:hover .icon {
-        background-image: url('./bookmark_add.svg');
-    }
-
-
     &[data-state="bookmark-added"] .icon {
         background-image: url('./bookmark_added.svg');
     }
 
     &[data-state="bookmarked"] .icon {
         background-image: url('./bookmark.svg');
-    }
-
-    &[data-state="bookmarked"]:hover .icon {
-        background-image: url('./bookmark_remove.svg');
     }
 
     &[data-state="bookmark-removed"] .icon {
@@ -54,6 +45,16 @@
             max-width: 300px;
             margin-right: 6px;
             margin-left: 10px;
+        }
+    }
+
+    @media (hover: hover) {
+        &[data-state="default"]:hover .icon {
+            background-image: url('./bookmark_add.svg');
+        }
+
+        &[data-state="bookmarked"]:hover .icon {
+            background-image: url('./bookmark_remove.svg');
         }
     }
 }

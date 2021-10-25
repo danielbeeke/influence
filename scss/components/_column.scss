@@ -1,5 +1,5 @@
 .column {
-    scroll-snap-align: start end;
+    scroll-snap-align: end;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -48,7 +48,7 @@
         overflow-y: auto;
         scrollbar-width: none;
         width: 100%;
-        padding-bottom: 80px;
+        padding-bottom: 120px;
 
         &::-webkit-scrollbar {
             display: none;
