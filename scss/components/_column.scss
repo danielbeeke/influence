@@ -55,6 +55,7 @@
         overflow-y: auto;
         scrollbar-width: none;
         width: 320px;
+        padding-bottom: 80px;
 
         &::-webkit-scrollbar {
             display: none;
@@ -87,13 +88,6 @@
         animation: removeColumn .4s ease-in-out .6s 1 both;
     }
 }
-
-.column:last-child {
-    .inner {
-        padding-bottom: 80px;
-    }
-}
-
 
 @keyframes createColumn {
     0% { opacity: 0; max-width: 0; }

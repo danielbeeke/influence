@@ -12,9 +12,10 @@
         box-shadow: 5px 0 0 white, -5px 0 0 white;
         box-decoration-break: clone;
         background: white;
-        margin-right: 20px;
         padding: 2px;
         border-radius: 3px;
+        position: relative;
+        right: 20px;
     }
 
     .block {
