@@ -9,6 +9,7 @@ import { getState } from '../helpers/getState';
 import { continueColumnsRender } from '../helpers/continueColumnsRender'
 import { debounce } from '../helpers/debounce';
 import { unique } from '../helpers/unique'
+import { thumbnailAlternative } from '../helpers/thumbnailAlternative';
 
 const columns = []
 
@@ -113,7 +114,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
         <div class="selected-person">
             <h1 class="title">${selectedPerson.label} <button class="close" onclick=${() => {location.hash = ''; drawApp()}}></button></h1>
             <div class="abstract">
-                ${selectedPerson.image ? html`<img class="image" src=${`https://images.weserv.nl/?url=${selectedPerson.image}&w=300`} />` : null}
+                ${thumbnailAlternative(selectedPerson.image, selectedPerson.label, 300)}
                 ${selectedPerson.abstract}
             </div>
         </div>        

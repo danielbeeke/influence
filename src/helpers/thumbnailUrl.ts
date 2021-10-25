@@ -1,1 +1,1 @@
-export const thumbnailUrl = (url) => `https://images.weserv.nl/?url=${encodeURI(url)}&w=100&h=100&fit=cover&a=attention`
+export const thumbnailUrl = (url, size: number = 100) => `https://images.weserv.nl/?url=${encodeURI(url)}&w=${size}&h=${size}&fit=cover&a=attention`

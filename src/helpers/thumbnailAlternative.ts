@@ -5,7 +5,7 @@ import { thumbnailUrl } from './thumbnailUrl.js'
 import { drawApp } from '../app.js';
 const cache = kv('thumbnailAlternative')
 
-export const thumbnailAlternative = async (preferredImage: string, label: string) => {
+export const thumbnailAlternative = async (preferredImage: string, label: string, size = 100) => {
     const initials = label?.replace(/[^A-Z]/g,'').split('').map(name => name.substr(0, 1))
     let image = await cache.get(label)
     if (image === undefined) {
@@ -19,7 +19,7 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     }
 
     if (image === undefined) {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&titles=${label}&prop=pageimages&format=json&pithumbsize=400`
+        const url = `https://en.wikipedia.org/w/api.php?action=query&origin=*&titles=${label}&prop=pageimages&format=json&pithumbsize=${size}`
         const response = await fetch(url, {
             method: 'GET'
         })
@@ -37,5 +37,5 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     
     if (image === false) return fallback()
 
-    return html`<img onerror=${[onerror, { once: true }]} class="image" src=${thumbnailUrl(image)} />`
+    return html`<img onerror=${[onerror, { once: true }]} class="image" src=${thumbnailUrl(image, size)} />`
 }
