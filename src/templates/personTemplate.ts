@@ -37,10 +37,9 @@ export const personTemplate = (person: Person, index: number = 0, columnIndex: n
             style=${`--index: ${index}`}
             data-id=${person.id}>
         
-                ${thumbnailAlternative(person.image, person.label)}
-                ${influencePercentage ? html`<div class="influence" style=${`--percentage: ${influencePercentage}`}></div>` : null}
-
-                <button class="zoom" onclick=${() => { location.hash = person.id; drawApp(); } }></button>
+                <button class="expand-button" onclick=${() => { location.hash = person.id; drawApp(); } }>
+                    ${thumbnailAlternative(person.image, person.label)}
+                </button>
 
                 <a class="name" href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)}>
                     ${person.birth ? html`<span class="dates">${person.birth.substr(0, 4)} ${person.death ? html` / ${person.death.substr(0, 4)}` : null}</span>` : null}

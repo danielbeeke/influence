@@ -26,7 +26,7 @@ $border: 3px;
         margin-block: 0;
         color: black;
         text-decoration: none;
-        margin-left: 10px;
+        margin-left: 5px;
         font-weight: bold;
         display: flex;
         flex-direction: column;
@@ -122,7 +122,7 @@ $border: 3px;
 
     .progress-bar {
         margin-top: 7px;
-        width: 100%;
+        width: calc(100% - 20px);
         height: 2px;
         background: rgb(206, 206, 206);
         border-radius: 4px;
@@ -151,21 +151,12 @@ $border: 3px;
         }
     }
 
-    .zoom {
-        border: 10px solid transparent;
+    .expand-button {
+        padding: 0;
         appearance: none;
-        position: absolute;
-        transform: translateY(-50%);
-        z-index: 29;
-        padding: 20px;
+        border: none;
+        background: none;
         cursor: pointer;
-        transition: opacity .3s ease-in-out;
-        background: url('/zoom-tablet.svg') no-repeat center;
-        background-size: 20px;
-        top: 30px;
-        left: -28px;
-        width: 24px;
-        height: 24px;
     }
 
     &.active {

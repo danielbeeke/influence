@@ -1,6 +1,6 @@
 .legend {
     bottom: 80px;
-    right: 13px;
+    right: 9px;
     position: fixed;
     font-size: 12px;
     text-align: right;
@@ -9,6 +9,7 @@
     z-index: 120;
     gap: 10px;
     align-items: center;
+    color: rgb(88, 88, 88);
 
     .desktop {
         display: none;
@@ -16,24 +17,33 @@
 
     .text {
         writing-mode: vertical-rl;
+        text-align: start;
         transform: rotate(180deg);
         box-decoration-break: clone;
-        background: white;
         padding: 3px;
         white-space: nowrap;
         border-radius: 3px;
-
-        br {
-            display: none;
-        }
     }
 
     .block {
         top: 0;
         display: inline-block;
         background: rgb(99, 59, 163);
-        height: 30px;
+        height: 20px;
         border-radius: 3px;
         width: 10px;
+        margin-inline-end: 6px;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .legend {
+        .mobile {
+            display: none;
+        }
+
+        .desktop {
+            display: block;
+        }
     }
 }

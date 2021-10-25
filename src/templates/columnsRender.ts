@@ -127,9 +127,8 @@ export const columnsRender = async (ids, skipBookmark = false) => {
         </div>
 
         <div class="legend">
-        <span class="text mobile">Relative influence</span>
-        <span class="text desktop">Influence of person<br>relative to all others shown</span>
-            <div class="block"></div>
+        <span class="text mobile"><span class="block"></span>Relative influence<br />Photos link to details, name to further influence</span>
+        <span class="text desktop"><span class="block"></span>Influence of person relative to all others shown<br />Photos link to details, name to further influence</span>
         </div>
 
         <a class="fixed-button restart-button" href="/">
