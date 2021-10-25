@@ -72,6 +72,8 @@ const saveToHomepage = async () => {
 
 }
 
+const influenceExtraRenders = new Map()
+
 export let allInfluence = []
 export const columnsRender = async (ids, skipBookmark = false) => {
     const persons = await Promise.all(ids.map(id => getPerson(id)))
@@ -87,17 +89,24 @@ export const columnsRender = async (ids, skipBookmark = false) => {
         let savedUrls = localStorage.saved ? JSON.parse(localStorage.saved) : []
         bookmarkState = !savedUrls.includes(location.pathname) ? 'default' : 'bookmarked'    
     }
-   
-    Promise.all([
-        getInfluencedBy(ids[0]),
-        Promise.resolve([persons[0]]),
-        ...ids.map(id => getInfluenced(id))
-    ]).then(columnResults => {
-        allInfluence = columnResults
-            .flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
-            .sort((a, b) => a - b)
-            .filter(unique)
-    })
+    
+    const cid = location.pathname
+    
+    if (!influenceExtraRenders.has(cid)) {
+        Promise.all([
+            getInfluencedBy(ids[0]),
+            Promise.resolve([persons[0]]),
+            ...ids.map(id => getInfluenced(id))
+        ]).then(columnResults => {
+            allInfluence = columnResults
+                .flatMap(columnPeople => columnPeople.map(person => parseInt(person.influence)))
+                .sort((a, b) => a - b)
+                .filter(unique)
+    
+            influenceExtraRenders.set(cid, true)
+            drawApp()
+        })    
+    }
 
     return html`
         ${selectedPerson ? html`

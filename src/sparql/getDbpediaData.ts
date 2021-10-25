@@ -29,7 +29,7 @@ const personQuery = (identifier:string , langCode: string) => `
 
         OPTIONAL { ?person dbo:influenced|^dbo:influencedBy ?influenced }
 
-        OPTIONAL {<http://dbpedia.org/resource/${identifier}> foaf:depiction ?image }
+        OPTIONAL {<http://dbpedia.org/resource/${identifier}> dbo:image ?image }
         FILTER (lang(?label) = '${langCode}')
         FILTER (lang(?abstract) = '${langCode}')
     }
@@ -45,7 +45,7 @@ const listQuery = (identifier:string , langCode: string, predicate: string) => `
         ?item dbo:abstract ?abstract .
         ?item rdfs:label ?label .
 
-        OPTIONAL {?item foaf:depiction ?image}
+        OPTIONAL {?item dbo:image ?image}
         FILTER (lang(?label) = '${langCode}')
         FILTER (lang(?abstract) = '${langCode}')
     }
@@ -71,7 +71,7 @@ const worksQuery = (identifier:string , langCode: string) => `
         OPTIONAL {?work dbp:releaseDate ?releaseDateProperty}
         BIND (COALESCE(?releaseDate, ?releaseDateProperty) as ?date)
 
-        OPTIONAL {?work foaf:depiction ?image}
+        OPTIONAL {?work dbo:image ?image}
         FILTER (lang(?label) = '${langCode}')
         FILTER (lang(?abstract) = '${langCode}')
     }
@@ -92,7 +92,7 @@ const influenceQuery = (identifier: string, referType: 'person' | 'others', lang
         OPTIONAL {?person dbo:activeYearsStartYear ?activeYearsStartYear}
         OPTIONAL {?person dbp:activeYearsStartYear ?activeYearsStartYearProperty}
 
-        OPTIONAL {?person foaf:depiction ?image }
+        OPTIONAL {?person dbo:image ?image }
 
         OPTIONAL {?person dbo:birthYear ?birthYear}
         OPTIONAL {?person dbo:deathYear ?deathYear}
