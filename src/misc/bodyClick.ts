@@ -11,7 +11,10 @@ document.body.addEventListener('click', (event: Event) => {
         const isActive = element.closest('.person')?.classList.contains('active')
         const isPerson = element.closest('.person')?.classList.contains('person')
 
-        if (isPerson && !isActive) setTimeout(continueColumnsRender, 400)
+        if (isPerson && !isActive) {
+            element.closest('.person').classList.add('loading')
+            setTimeout(continueColumnsRender, 400)
+        }
         const columns = [...document.querySelectorAll('.column')]
 
         if (isPerson && isActive) {

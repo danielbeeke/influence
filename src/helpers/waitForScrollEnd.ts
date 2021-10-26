@@ -20,8 +20,7 @@ export function waitForScrollEnd (element: Window | HTMLElement = window) {
                     last_y = yProp
                 }
                 
-                setTimeout(tick.bind(null, frames + 1), 5)
-                // requestAnimationFrame(tick.bind(null, frames + 1))
+                requestAnimationFrame(tick.bind(null, frames + 1))
             }
         }
         tick(0)

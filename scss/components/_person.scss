@@ -120,6 +120,20 @@ $border: 3px;
         border-radius: 50%;
     }
 
+    .loading-icon {
+        opacity: 0;
+        transition: opacity .3s ease-in-out;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 56px;
+        height: 56px;
+        padding: 6px;
+        border-radius: 50%;
+        z-index: 20;
+        background-color: rgba(black, .7);
+    }
+
     .progress-bar {
         margin-top: 7px;
         width: calc(100% - 20px);
@@ -170,6 +184,17 @@ $border: 3px;
                 width: 100%;
                 transform: translate(-50%, -50%) rotate(-45deg);
             }
+        }
+    }
+
+    &.loading {
+        .image-alternative,
+        .image {
+            opacity: .3;
+        }
+
+        .loading-icon {
+            opacity: 1;
         }
     }
 

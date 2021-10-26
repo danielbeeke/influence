@@ -202,7 +202,7 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number, tit
     const currentSearch = columnSearches.get(columnIndex)?.toLowerCase()
 
     return html`
-    <div ref=${element => columns.push(element)} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : ''}`}>
+    <div ref=${element => columns.push(element)} class=${`column is-loading ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : ''}`}>
         <h3 class=${`column-title ${activeColumns.get(columnIndex) ? 'active-search' : ''}`}>
             ${title}
             <input .value=${columnSearches.get(columnIndex) ?? ''} placeholder="Filter" onblur=${(event => onColumnBlur(event, columnIndex))} onkeyup=${(event => onColumnSearch(event, columnIndex))} ref=${element => input = element} type="search" class="search-field">

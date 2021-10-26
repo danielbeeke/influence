@@ -19,13 +19,15 @@ export const continueColumnsRender = async (forceDirectRender = false) => {
             const inner = column.querySelector('.inner')
             let behavior = runTime < 2000 ? 'auto' : 'smooth'
             if (forceDirectRender) behavior = 'auto'
-            inner.scrollTo({ top: top, behavior: behavior })
+            inner.scrollTo({ top, behavior })
             waiters.push(waitForScrollEnd((inner as HTMLElement)).then(() => {
+                column.classList.remove('is-loading')
                 disableScroll(column.querySelector('.inner'), 'y')
             }))
         }
         else {
             enableScroll(column.querySelector('.inner'), 'y')
+            column.classList.remove('is-loading')
         }
     }
 
@@ -33,11 +35,9 @@ export const continueColumnsRender = async (forceDirectRender = false) => {
     if (!runningScroll) {
         runningScroll = true
 
-        setTimeout(() => {
-            document.body.scrollTo({ left: document.body.scrollWidth, behavior: runTime < 2000 ? 'auto' : 'smooth' })
-            waitForScrollEnd(document.body).then(() => {
-                runningScroll = false
-            })
-        }, 600)
+        document.body.scrollTo({ left: document.body.scrollWidth, behavior: runTime < 2000 ? 'auto' : 'smooth' })
+        waitForScrollEnd(document.body).then(() => {
+            runningScroll = false
+        })
     }
 }

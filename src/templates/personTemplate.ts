@@ -39,6 +39,7 @@ export const personTemplate = (person: Person, index: number = 0, columnIndex: n
         
                 <button class="expand-button" onclick=${() => { location.hash = person.id; drawApp(); } }>
                     ${thumbnailAlternative(person.image, person.label)}
+                    <img class="loading-icon" src="/loading.svg" />
                 </button>
 
                 <a class="name" href=${isActive ? removeIdFromUrl(columnIndex) : addIdToUrl(person.id, columnIndex)}>
