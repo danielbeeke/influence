@@ -3,14 +3,19 @@
     "short_name": "Influence",
     "start_url": ".",
     "display": "fullscreen",
-    "background_color": "#fff",
-    "theme_color": "#fff",
+    "background_color": "#dadaff",
+    "theme_color": "#dadaff",
     "description": "Shows influence from big thinkers.",
     "icons": [{
       "src": "logo.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"
+    }, {
+      "src": "logo.svg",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }]
   }
   
