@@ -11,10 +11,6 @@
       "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
       "type": "image/svg+xml",
       "purpose": "any"
-    }],
-    "related_applications": [{
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=cheeaun.hackerweb"
     }]
   }
   
