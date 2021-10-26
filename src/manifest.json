@@ -14,7 +14,7 @@
       "type": "image/svg+xml",
       "purpose": "any"
     }, {
-      "src": "/logo.svg",
+      "src": "/logo-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
