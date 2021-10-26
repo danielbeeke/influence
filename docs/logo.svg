@@ -23,6 +23,19 @@
        inkscape:vp_z="209.99999 : -13.033339 : 1"
        inkscape:persp3d-origin="105 : -62.533337 : 1"
        id="perspective41" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter864"
+       x="-4.3200009e-05"
+       width="1.0000864"
+       y="-4.3200009e-05"
+       height="1.0000864">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.001502252"
+         id="feGaussianBlur866" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -31,11 +44,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="19.26937"
-     inkscape:cy="374.1787"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="86.848807"
+     inkscape:cy="327.26345"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g922"
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:window-width="2560"
@@ -52,7 +65,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -67,7 +80,7 @@
          id="g23"
          transform="translate(-16.984235,-37.620261)">
         <circle
-           style="fill:#f5fff0;fill-opacity:1;stroke-width:0.264583"
+           style="fill:#633ba3;fill-opacity:0.23999999;stroke-width:0.264583"
            id="path17"
            cx="92.507973"
            cy="119.64181"
@@ -83,7 +96,7 @@
          id="g39"
          transform="matrix(0.77296604,0,0,0.77296604,4.0182154,-10.457508)">
         <circle
-           style="fill:#d8ffc4;fill-opacity:1;stroke-width:0.264583"
+           style="fill:#633ba3;fill-opacity:0.59007251;stroke-width:0.264583"
            id="circle35"
            cx="92.507973"
            cy="119.64181"
@@ -99,7 +112,7 @@
          id="g33"
          transform="matrix(0.55980564,0,0,0.55980564,23.737253,15.045388)">
         <circle
-           style="fill:#9dff6c;fill-opacity:1;stroke-width:0.264583"
+           style="fill:#633ba3;fill-opacity:1;stroke-width:0.264583;filter:url(#filter864)"
            id="circle29"
            cx="92.507973"
            cy="119.64181"
@@ -113,10 +126,10 @@
       </g>
       <g
          id="g27"
-         transform="matrix(1.2257687,0,0,1.0512814,-37.840623,-32.580283)"
-         style="fill:#666666">
+         transform="matrix(1.0869417,0,0,0.93221633,-25.023555,-19.604923)"
+         style="fill:#666666;stroke:#ffffff;stroke-width:1.22407006;stroke-miterlimit:4;stroke-dasharray:none">
         <ellipse
-           style="fill:#666666;stroke-width:0.130612"
+           style="fill:#666666;stroke-width:1.22407006;stroke:#ffffff;stroke-miterlimit:4;stroke-dasharray:none"
            id="path10"
            cx="92.568169"
            cy="85.193954"
@@ -124,7 +137,7 @@
            ry="10.843636" />
         <path
            id="circle12"
-           style="fill:#666666;stroke-width:0.279783"
+           style="fill:#666666;stroke-width:1.22407006;stroke:#ffffff;stroke-miterlimit:4;stroke-dasharray:none"
            d="m 92.545563,99.584284 c -5.138158,0.0494 -9.391489,18.089776 -10.174034,36.639046 -0.509466,11.35346 19.321321,9.33222 19.914651,-4.16471 -0.74325,-18.71141 -4.530461,-32.473726 -9.713055,-32.473686 -0.0091,-3e-5 -0.01814,-3e-5 -0.02728,0 z"
            sodipodi:nodetypes="sccsss" />
       </g>
