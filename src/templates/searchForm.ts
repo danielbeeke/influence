@@ -13,8 +13,8 @@ const search = async (event) => {
         SELECT ?uri ?label ?image  (count(?influenced) as ?influence) { 
             ?uri rdfs:label ?label .
             ?uri a schema:Person .
-            ?uri dbo:thumbnail ?image .
             ?label bif:contains '"${event.target.value}"' .
+            OPTIONAL { ?uri dbo:image ?image }
             filter langMatches(lang(?label), "en")
             OPTIONAL { ?uri dbo:influenced|^dbo:influencedBy ?influenced }
         }
@@ -30,7 +30,7 @@ const search = async (event) => {
     updateSuggestions(json.results.bindings.map(binding => {
         return {
             label: binding.label.value,
-            image: binding.image.value,
+            image: binding.image?.value,
             id: lastPart(binding.uri.value)
         }
     }))

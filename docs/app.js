@@ -110,14 +110,14 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
         SELECT ?uri ?label ?image  (count(?influenced) as ?influence) { 
             ?uri rdfs:label ?label .
             ?uri a schema:Person .
-            ?uri dbo:thumbnail ?image .
             ?label bif:contains '"${t.target.value}"' .
+            OPTIONAL { ?uri dbo:image ?image }
             filter langMatches(lang(?label), "en")
             OPTIONAL { ?uri dbo:influenced|^dbo:influencedBy ?influenced }
         }
         ORDER BY DESC(?influence) 
         LIMIT 20        
-    `;pt=!0,S();let r=await B(e);mr(r.results.bindings.map(n=>({label:n.label.value,image:n.image.value,id:ur(n.uri.value)}))),pt=!1,S()},ht=[],mr=t=>{ht=t},pt=!1,gr=()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];return ye`
+    `;pt=!0,S();let r=await B(e);mr(r.results.bindings.map(n=>{var i;return{label:n.label.value,image:(i=n.image)==null?void 0:i.value,id:ur(n.uri.value)}})),pt=!1,S()},ht=[],mr=t=>{ht=t},pt=!1,gr=()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];return ye`
 
 
         <form class=${`search-form ${pt?"is-searching":""}`} onsubmit=${e=>e.preventDefault()}>
