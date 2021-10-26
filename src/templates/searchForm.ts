@@ -16,7 +16,7 @@ const search = async (event) => {
             ?uri dbo:thumbnail ?image .
             ?label bif:contains '"${event.target.value}"' .
             filter langMatches(lang(?label), "en")
-            ?uri dbo:influenced|^dbo:influencedBy ?influenced .
+            OPTIONAL { ?uri dbo:influenced|^dbo:influencedBy ?influenced }
         }
         ORDER BY DESC(?influence) 
         LIMIT 20        
