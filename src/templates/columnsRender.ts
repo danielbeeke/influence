@@ -151,7 +151,9 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             <div class="abstract">
                 ${thumbnailAlternative(hashState.popup.image, hashState.popup.label, 300, true)}
                 <p ref=${element => element.innerText = hashState.popup.abstract}></p>
+                <a href=${`/${hashState.popup.id}`}>Start with ${hashState.popup.label}</a>
             </div>
+
             ` : null}
         </div>        
         ${!hashState.popup ? html`<img class="popup-loading" src="/loading.svg" />` : null}

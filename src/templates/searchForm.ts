@@ -57,8 +57,15 @@ export const searchForm = () => {
     const savedUrls = localStorage.saved ? JSON.parse(localStorage.saved) : []
 
     return html`
+
+
         <form class="search-form" onsubmit=${(e) => e.preventDefault()}>
-            <h3 class="title">Search for a philosopher or an influential thinker</h3>
+        <header class="site-header">
+            <img class="site-logo" src="/logo.svg" />
+            <h1 class="site-title">Influence</h1>
+        </header>
+
+        <h3 class="title">Search for a philosopher or an influential thinker</h3>
             <div class="search-field-wrapper">
             <img class="search-icon" src="/zoom.svg" />
             <input onkeyup=${debounce(search, 500)} type="search" class="search-input">

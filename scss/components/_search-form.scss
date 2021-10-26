@@ -6,6 +6,7 @@
     width: 100%;
     position: relative;
     flex-direction: column;
+    align-items: center;
 
     .title {
         text-align: center;
@@ -37,3 +38,24 @@
     border: 1px solid rgb(212, 212, 212);
 }
 
+.site-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    gap: 10px;
+    margin-bottom: 100px;
+
+    .site-title {
+        margin: 0;
+        font-weight: 100;
+        text-transform: uppercase;
+    }
+
+    .site-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+}
