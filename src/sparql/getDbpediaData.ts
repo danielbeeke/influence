@@ -115,7 +115,7 @@ const influenceQuery = (identifier: string, referType: 'person' | 'others', lang
     LIMIT 1000
 `
 const staticCache = new Map()
-const fetchQuery = async (query) => {
+export const fetchQuery = async (query) => {
     let result = staticCache.get(query)
 
     if (!result) {

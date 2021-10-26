@@ -22,6 +22,21 @@
     }
 }
 
+.search-loading-icon {
+    background: #633ba3;
+    position: absolute;
+    right: 0;
+    padding: 5px;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+}
+
+.is-searching .search-loading-icon {
+    opacity: 1;
+}
+
 .search-field-wrapper {
     position: relative;
     display: flex;

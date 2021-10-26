@@ -4,38 +4,31 @@ import { thumbnailAlternative } from '../helpers/thumbnailAlternative.js';
 import { drawApp } from '../app.js';
 import { lastPart } from '../helpers/lastPart.js';
 import { removeBookmark } from '../helpers/removeBookmark.js';
-
+import { fetchQuery } from '../sparql/getDbpediaData'
 
 const search = async (event) => {
     if (event.target.value.length < 4) return
     
     const query = `
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX dbo:  <http://dbpedia.org/ontology/>
-        PREFIX bif: <bif:>
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    
-        SELECT DISTINCT ?uri ?label ?image  (count(DISTINCT ?influenced) as ?influence) {
+        SELECT ?uri ?label ?image  (count(?influenced) as ?influence) { 
             ?uri rdfs:label ?label .
-            ?uri a <http://xmlns.com/foaf/0.1/Person> .
+            ?uri a schema:Person .
             ?uri dbo:thumbnail ?image .
             ?label bif:contains '"${event.target.value}"' .
             filter langMatches(lang(?label), "en")
             ?uri dbo:influenced|^dbo:influencedBy ?influenced .
         }
-        ORDER BY DESC(?influence)
+        ORDER BY DESC(?influence) 
         LIMIT 20        
     `
 
-    const url = `https://dbpedia.org/sparql${'?query='}${encodeURIComponent(query)}&format=json`
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/sparql-results+json',
-        },
-    })
+    isSearching = true
 
-    const json = await response.json()
+    drawApp()
+
+        console.log(query)
+
+    const json = await fetchQuery(query)
     updateSuggestions(json.results.bindings.map(binding => {
         return {
             label: binding.label.value,
@@ -43,6 +36,8 @@ const search = async (event) => {
             id: lastPart(binding.uri.value)
         }
     }))
+
+    isSearching = false
 
     drawApp()
 }
@@ -54,13 +49,15 @@ const updateSuggestions = (newSuggestions) => {
     suggestions = newSuggestions
 }
 
+let isSearching = false
+
 export const searchForm = () => {
     const savedUrls = localStorage.saved ? JSON.parse(localStorage.saved) : []
 
     return html`
 
 
-        <form class="search-form" onsubmit=${(e) => e.preventDefault()}>
+        <form class=${`search-form ${isSearching ? 'is-searching' : ''}`} onsubmit=${(e) => e.preventDefault()}>
         <header class="site-header">
             <img class="site-logo" src="/logo.svg" />
             <h1 class="site-title">Influence</h1>
@@ -70,6 +67,7 @@ export const searchForm = () => {
             <div class="search-field-wrapper">
             <img class="search-icon" src="/zoom.svg" />
             <input onkeyup=${debounce(search, 500)} type="search" class="search-input">
+            <img class="search-loading-icon" src="/loading.svg" />
             </div>
 
             ${suggestions.map(suggestion => html`
