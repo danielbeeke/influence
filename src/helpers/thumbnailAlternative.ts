@@ -5,7 +5,7 @@ import { thumbnailUrl } from './thumbnailUrl.js'
 import { drawApp } from '../app.js';
 const cache = kv('thumbnailAlternative')
 
-export const thumbnailAlternative = async (preferredImage: string, label: string, size = 100) => {
+export const thumbnailAlternative = async (preferredImage: string, label: string, size = 100, disableCover = false) => {
     const initials = label?.replace(/[^A-Z]/g,'').split('').map(name => name.substr(0, 1))
     let image = await cache.get(label)
     if (image === undefined) {
@@ -37,5 +37,5 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
     
     if (image === false) return fallback()
 
-    return html`<img onerror=${[onerror, { once: true }]} class="image" src=${thumbnailUrl(image, size)} />`
+    return html`<img onerror=${[onerror, { once: true }]} class="image" src=${thumbnailUrl(image, size, disableCover)} />`
 }

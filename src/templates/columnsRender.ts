@@ -78,11 +78,16 @@ const influenceExtraRenders = new Map()
 export let allInfluence = []
 export const columnsRender = async (ids, skipBookmark = false) => {
     const persons = await Promise.all(ids.map(id => getPerson(id)))
-    let selectedPerson = null
+
+    const hashState = getState(location.hash, {
+        popup: null
+    })
+
+    let body = ''
     if (location.hash) {
         const id = decodeURI(location.hash).substr(1)
         if (id === 'info') {
-            selectedPerson  = {
+            hashState.popup  = {
                 label: 'About this app',
                 abstract: `The purple bars show the relative influence compared to all the others currently shown in the app.
                 
@@ -90,11 +95,30 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             }
         }
         else {
-            selectedPerson = id ? await getPerson(id, 'en') : null
+            if (id) {
+                if (!hashState.popup) {
+                    setTimeout(() => {
+                        getPerson(id, 'en').then(object => {
+                            hashState.popup = object
+                            body = hashState.popup.abstract ?? ''
+            
+                            const matches = body.match(/(\.)[^ "]/g)
+                            if (matches) {
+                                for (const match of matches) {
+                                    body = body.replace(match, '.\n\n' + match.substr(1))
+                                }    
+                            }
+    
+                            hashState.popup.abstract = body
+                            drawApp()
+                        })        
+                    }, 100)
+                }
+            }
         }
     }
 
-    document.body.dataset.selectedPerson = (!!selectedPerson).toString()
+    document.body.dataset.selectedPerson = (!!location.hash).toString()
 
     if (!bookmarkState.includes('-')) {
         let savedUrls = localStorage.saved ? JSON.parse(localStorage.saved) : []
@@ -102,7 +126,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
     }
     
     const cid = location.pathname
-    
+
     if (!influenceExtraRenders.has(cid)) {
         Promise.all([
             getInfluencedBy(ids[0]),
@@ -120,14 +144,17 @@ export const columnsRender = async (ids, skipBookmark = false) => {
     }
 
     return html`
-        ${selectedPerson ? html`
+        ${location.hash ? html`
         <div class="selected-person">
-            <h1 class="title">${selectedPerson.label} <button class="close" onclick=${() => {location.hash = ''; drawApp()}}></button></h1>
+            ${hashState.popup ? html`
+            <h1 class="title">${hashState.popup.label} <button class="close" onclick=${() => {location.hash = ''; drawApp()}}></button></h1>
             <div class="abstract">
-                ${thumbnailAlternative(selectedPerson.image, selectedPerson.label, 300)}
-                <p ref=${element => element.innerText = selectedPerson.abstract ?? ''}></p>
+                ${thumbnailAlternative(hashState.popup.image, hashState.popup.label, 300, true)}
+                <p ref=${element => element.innerText = hashState.popup.abstract}></p>
             </div>
+            ` : null}
         </div>        
+        ${!hashState.popup ? html`<img class="popup-loading" src="/loading.svg" />` : null}
         ` : null}
 
         <div class="people">

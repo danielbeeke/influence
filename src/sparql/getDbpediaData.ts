@@ -64,9 +64,7 @@ const worksQuery = (identifier:string , langCode: string) => `
         ?work dbo:author <http://dbpedia.org/resource/${identifier}> .
         ?work dbo:abstract ?abstract .
         ?work dbp:name ?label .
-
-        OPTIONAL {?work dbo:numberOfPages ?pages}
-        
+       
         OPTIONAL {?work dbo:releaseDate ?releaseDate}
         OPTIONAL {?work dbp:releaseDate ?releaseDateProperty}
         BIND (COALESCE(?releaseDate, ?releaseDateProperty) as ?date)

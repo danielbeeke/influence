@@ -34,6 +34,10 @@
         padding: 20px 20px 10px 20px;
     }
 
+    p:first-of-type {
+        margin-top: 0;
+    }
+
     .abstract {
         font-size: 17px;
         line-height: 30px;
@@ -122,4 +126,12 @@ body {
 
 body[data-selected-person="true"]:after {
     opacity: .3;
+}
+
+.popup-loading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 399;
 }
