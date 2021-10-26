@@ -15,15 +15,16 @@ const search = async (event) => {
         PREFIX bif: <bif:>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     
-        SELECT DISTINCT ?uri ?label ?image {
+        SELECT DISTINCT ?uri ?label ?image  (count(DISTINCT ?influenced) as ?influence) {
             ?uri rdfs:label ?label .
             ?uri a <http://xmlns.com/foaf/0.1/Person> .
             ?uri dbo:thumbnail ?image .
             ?label bif:contains '"${event.target.value}"' .
             filter langMatches(lang(?label), "en")
+            ?uri dbo:influenced|^dbo:influencedBy ?influenced .
         }
-    
-        LIMIT 10        
+        ORDER BY DESC(?influence)
+        LIMIT 20        
     `
 
     const url = `https://dbpedia.org/sparql${'?query='}${encodeURIComponent(query)}&format=json`

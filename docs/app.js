@@ -9,15 +9,16 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
         PREFIX bif: <bif:>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     
-        SELECT DISTINCT ?uri ?label ?image {
+        SELECT DISTINCT ?uri ?label ?image  (count(DISTINCT ?influenced) as ?influence) {
             ?uri rdfs:label ?label .
             ?uri a <http://xmlns.com/foaf/0.1/Person> .
             ?uri dbo:thumbnail ?image .
             ?label bif:contains '"${t.target.value}"' .
             filter langMatches(lang(?label), "en")
+            ?uri dbo:influenced|^dbo:influencedBy ?influenced .
         }
-    
-        LIMIT 10        
+        ORDER BY DESC(?influence)
+        LIMIT 20        
     `,r=`https://dbpedia.org/sparql?query=${encodeURIComponent(e)}&format=json`,i=await(await fetch(r,{method:"GET",headers:{Accept:"application/sparql-results+json"}})).json();cr(i.results.bindings.map(a=>({label:a.label.value,image:a.image.value,id:sr(a.uri.value)}))),S()},lt=[],cr=t=>{lt=t},lr=()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];return ye`
 
 
