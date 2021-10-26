@@ -2,6 +2,8 @@
     "name": "Influence",
     "short_name": "Influence",
     "start_url": ".",
+    "categories": ["education", "utilities", "entertainment"],
+    "orientation": "portrait-primary",
     "display": "fullscreen",
     "background_color": "#dadaff",
     "theme_color": "#dadaff",
