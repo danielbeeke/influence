@@ -1,7 +1,7 @@
 {
     "name": "Influence",
     "short_name": "Influence",
-    "start_url": ".",
+    "start_url": "/",
     "display": "fullscreen",
     "background_color": "#fff",
     "theme_color": "#fff",
