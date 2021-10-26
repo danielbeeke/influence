@@ -6,7 +6,7 @@ const personQuery = (identifier:string , langCode: string) => `
     PREFIX dbo: <http://dbpedia.org/ontology/>
     PREFIX dbr: <http://dbpedia.org/resource/>
 
-    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ?abstract ?birth ?death (count(DISTINCT ?influenced) as ?influence)
+    SELECT DISTINCT (REPLACE(STR(?person), "http://dbpedia.org/resource/", "") as ?id) ?label ?image ?abstract ?birth ?death (count(DISTINCT ?influenced) as ?influence) ?isPerson
     WHERE {
         <http://dbpedia.org/resource/${identifier}> rdfs:label ?label .
 
@@ -32,6 +32,7 @@ const personQuery = (identifier:string , langCode: string) => `
         OPTIONAL {<http://dbpedia.org/resource/${identifier}> dbo:image ?image }
         FILTER (lang(?label) = '${langCode}')
         FILTER (lang(?abstract) = '${langCode}')
+        BIND(EXISTS{?person a schema:Person} AS ?isPerson)
     }
 `
 
