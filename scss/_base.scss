@@ -12,6 +12,7 @@ body {
     transition: opacity .5s ease-in-out;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    scroll-padding-inline: 30px;
 
     &::-webkit-scrollbar {
         display: none;

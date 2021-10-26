@@ -194,13 +194,15 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
         <h3>Interests:</h3>
         ${e.map(r=>j`<li><a class="interest item" href=${`#${r.id}`}>${r.label}</a></li>`)}
     </ul>
-    `:null},se="",di=async()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];(t.includes(location.pathname)?"bookmarked":"default")==="bookmarked"?(t=t.filter(r=>r!==location.pathname),se="bookmark-removed"):(t.push(location.pathname),se="bookmark-added"),localStorage.saved=JSON.stringify(t),await T(),setTimeout(()=>{se=t.includes(location.pathname)?"bookmarked":"default",T()},1500)},Rr=new Map,De=[],xr=async(t,e=!1)=>{let r=await Promise.all(t.map(a=>ft(a))),n=null;if(location.hash){let a=decodeURI(location.hash).substr(1);n=a?await ft(a,"en"):null}document.body.dataset.selectedPerson=(!!n).toString(),se.includes("-")||(se=(localStorage.saved?JSON.parse(localStorage.saved):[]).includes(location.pathname)?"bookmarked":"default");let i=location.pathname;return Rr.has(i)||Promise.all([pt(t[0]),Promise.resolve([r[0]]),...t.map(a=>dt(a))]).then(a=>{De=a.flatMap(o=>o.map(s=>parseInt(s.influence))).sort((o,s)=>o-s).filter(Ir),Rr.set(i,!0),T()}),j`
+    `:null},se="",di=async()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];(t.includes(location.pathname)?"bookmarked":"default")==="bookmarked"?(t=t.filter(r=>r!==location.pathname),se="bookmark-removed"):(t.push(location.pathname),se="bookmark-added"),localStorage.saved=JSON.stringify(t),await T(),setTimeout(()=>{se=t.includes(location.pathname)?"bookmarked":"default",T()},1500)},Rr=new Map,De=[],xr=async(t,e=!1)=>{let r=await Promise.all(t.map(a=>ft(a))),n=null;if(location.hash){let a=decodeURI(location.hash).substr(1);a==="info"?n={label:"About this app",abstract:`The purple bars show the relative influence compared to all the others currently shown in the app.
+                
+                Click on the photos of the people to see a popup with more information. Click on the names to expand and see the influence of that person.`}:n=a?await ft(a,"en"):null}document.body.dataset.selectedPerson=(!!n).toString(),se.includes("-")||(se=(localStorage.saved?JSON.parse(localStorage.saved):[]).includes(location.pathname)?"bookmarked":"default");let i=location.pathname;return Rr.has(i)||Promise.all([pt(t[0]),Promise.resolve([r[0]]),...t.map(a=>dt(a))]).then(a=>{De=a.flatMap(o=>o.map(s=>parseInt(s.influence))).sort((o,s)=>o-s).filter(Ir),Rr.set(i,!0),T()}),j`
         ${n?j`
         <div class="selected-person">
             <h1 class="title">${n.label} <button class="close" onclick=${()=>{location.hash="",T()}}></button></h1>
             <div class="abstract">
                 ${ne(n.image,n.label,300)}
-                ${n.abstract}
+                <p ref=${a=>{var o;return a.innerText=(o=n.abstract)!=null?o:""}}></p>
             </div>
         </div>        
         `:null}
@@ -211,22 +213,24 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
             ${t.map((a,o)=>gt(a,dt,o+1,`Influenced by ${r[o].label}`))}
         </div>
 
-        <div class="legend">
-        <span class="text mobile"><span class="block"></span>Relative influence<br />Photos link to details, name to further influence</span>
-        <span class="text desktop"><span class="block"></span>Influence of person relative to all others shown<br />Photos link to details, name to further influence</span>
+        <div class="fixed-menu">
+            <a class="fixed-button info-button" href="#info">
+                <div class="icon"></div>
+            </a>
+
+            <a class="fixed-button restart-button" href="/">
+                <div class="icon"></div>
+            </a>
+
+            <button data-state=${se} class="fixed-button bookmark-button" onclick=${di}>
+                <span class="text removed">Bookmark removed</span>
+                <span class="text added">Bookmark added</span>
+                <div class="icon"></div>
+            </button>        
         </div>
 
-        <a class="fixed-button restart-button" href="/">
-            <div class="icon"></div>
-        </a>
-
-        <button data-state=${se} class="fixed-button bookmark-button" onclick=${di}>
-            <span class="text removed">Bookmark removed</span>
-            <span class="text added">Bookmark added to home</span>
-            <div class="icon"></div>
-        </button>
     `},_t=new Map,pi=async(t,e)=>{_t.set(t,!0),await T(),e.focus()},Ue=(t,e=null)=>{_t.set(t,!1),He.set(t,""),e&&(e.value=""),T()},He=new Map,hi=re((t,e)=>{He.set(e,t.target.value),T()},100),vi=(t,e)=>{t.target.value||Ue(e)},gt=async(t,e,r,n)=>{var c,l;let i=_r(t+":"+r,{people:[],isLoading:!0});i.isLoading&&e(t).then(f=>{i.people=f,i.isLoading=!1,T().then(B)});let a=i.people.find(f=>Ce(f.id,r)),o,s=(c=He.get(r))==null?void 0:c.toLowerCase();return j`
-    <div ref=${f=>ui.push(f)} class=${`column ${r===0?"selected":""} ${a?"active":"is-loading"}`}>
+    <div ref=${f=>ui.push(f)} class=${`column ${r===0?"selected":""} ${a?"active":""}`}>
         <h3 class=${`column-title ${_t.get(r)?"active-search":""}`}>
             ${n}
             <input .value=${(l=He.get(r))!=null?l:""} placeholder="Filter" onblur=${f=>vi(f,r)} onkeyup=${f=>hi(f,r)} ref=${f=>o=f} type="search" class="search-field">

@@ -1,4 +1,6 @@
 @use "sass:math";
+$mobileWidth: calc(100vw - 60px);
+
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 @import './components/scroll-box';
 

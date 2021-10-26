@@ -1,6 +1,7 @@
 .people {
     display: flex;
-    height: 100%;
+    height: calc(100% - 80px);
+    flex: 1 1 auto;
     min-width: 100vw;
     width: max-content;
 }

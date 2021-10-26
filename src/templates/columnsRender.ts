@@ -81,7 +81,17 @@ export const columnsRender = async (ids, skipBookmark = false) => {
     let selectedPerson = null
     if (location.hash) {
         const id = decodeURI(location.hash).substr(1)
-        selectedPerson = id ? await getPerson(id, 'en') : null
+        if (id === 'info') {
+            selectedPerson  = {
+                label: 'About this app',
+                abstract: `The purple bars show the relative influence compared to all the others currently shown in the app.
+                
+                Click on the photos of the people to see a popup with more information. Click on the names to expand and see the influence of that person.`
+            }
+        }
+        else {
+            selectedPerson = id ? await getPerson(id, 'en') : null
+        }
     }
 
     document.body.dataset.selectedPerson = (!!selectedPerson).toString()
@@ -115,7 +125,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             <h1 class="title">${selectedPerson.label} <button class="close" onclick=${() => {location.hash = ''; drawApp()}}></button></h1>
             <div class="abstract">
                 ${thumbnailAlternative(selectedPerson.image, selectedPerson.label, 300)}
-                ${selectedPerson.abstract}
+                <p ref=${element => element.innerText = selectedPerson.abstract ?? ''}></p>
             </div>
         </div>        
         ` : null}
@@ -126,20 +136,22 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             ${ids.map((id, index) => createColumn(id, getInfluenced, index + 1, `Influenced by ${(persons[index] as Person).label}`))}
         </div>
 
-        <div class="legend">
-        <span class="text mobile"><span class="block"></span>Relative influence<br />Photos link to details, name to further influence</span>
-        <span class="text desktop"><span class="block"></span>Influence of person relative to all others shown<br />Photos link to details, name to further influence</span>
+        <div class="fixed-menu">
+            <a class="fixed-button info-button" href="#info">
+                <div class="icon"></div>
+            </a>
+
+            <a class="fixed-button restart-button" href="/">
+                <div class="icon"></div>
+            </a>
+
+            <button data-state=${bookmarkState} class="fixed-button bookmark-button" onclick=${saveToHomepage}>
+                <span class="text removed">Bookmark removed</span>
+                <span class="text added">Bookmark added</span>
+                <div class="icon"></div>
+            </button>        
         </div>
 
-        <a class="fixed-button restart-button" href="/">
-            <div class="icon"></div>
-        </a>
-
-        <button data-state=${bookmarkState} class="fixed-button bookmark-button" onclick=${saveToHomepage}>
-            <span class="text removed">Bookmark removed</span>
-            <span class="text added">Bookmark added to home</span>
-            <div class="icon"></div>
-        </button>
     `
 }
 
@@ -190,7 +202,7 @@ const createColumn = async (id, peopleGetter: Function, columnIndex: number, tit
     const currentSearch = columnSearches.get(columnIndex)?.toLowerCase()
 
     return html`
-    <div ref=${element => columns.push(element)} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : 'is-loading'}`}>
+    <div ref=${element => columns.push(element)} class=${`column ${columnIndex === 0 ? 'selected' : ''} ${activePerson ? 'active' : ''}`}>
         <h3 class=${`column-title ${activeColumns.get(columnIndex) ? 'active-search' : ''}`}>
             ${title}
             <input .value=${columnSearches.get(columnIndex) ?? ''} placeholder="Filter" onblur=${(event => onColumnBlur(event, columnIndex))} onkeyup=${(event => onColumnSearch(event, columnIndex))} ref=${element => input = element} type="search" class="search-field">

@@ -3,7 +3,7 @@
     right: 9px;
     position: fixed;
     font-size: 12px;
-    text-align: right;
+    writing-mode: vertical-lr;
     display: flex;
     flex-direction: column;
     z-index: 120;
@@ -16,9 +16,6 @@
     }
 
     .text {
-        writing-mode: vertical-rl;
-        text-align: start;
-        transform: rotate(180deg);
         box-decoration-break: clone;
         padding: 3px;
         white-space: nowrap;
