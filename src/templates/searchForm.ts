@@ -26,8 +26,6 @@ const search = async (event) => {
 
     drawApp()
 
-        console.log(query)
-
     const json = await fetchQuery(query)
     updateSuggestions(json.results.bindings.map(binding => {
         return {

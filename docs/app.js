@@ -117,7 +117,7 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
         }
         ORDER BY DESC(?influence) 
         LIMIT 20        
-    `;pt=!0,S(),console.log(e);let r=await B(e);mr(r.results.bindings.map(n=>({label:n.label.value,image:n.image.value,id:ur(n.uri.value)}))),pt=!1,S()},ht=[],mr=t=>{ht=t},pt=!1,gr=()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];return ye`
+    `;pt=!0,S();let r=await B(e);mr(r.results.bindings.map(n=>({label:n.label.value,image:n.image.value,id:ur(n.uri.value)}))),pt=!1,S()},ht=[],mr=t=>{ht=t},pt=!1,gr=()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];return ye`
 
 
         <form class=${`search-form ${pt?"is-searching":""}`} onsubmit=${e=>e.preventDefault()}>
