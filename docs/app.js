@@ -105,8 +105,7 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
     ORDER BY DESC(?influence)
 
     LIMIT 1000
-`,dr=new Map,B=async t=>{let e=dr.get(t);if(!e){let r=t.replaceAll(`
-`," ");return fetch(`https://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=${r}&format=application/json-ld`).then(i=>i.json()).then(i=>(dr.set(t,i),i))}return e},ae=(t,e=!1)=>{let r=t.head.vars,n=t.results.bindings.map(i=>{var o;let a={};for(let s of r)a[s]=(o=i[s])==null?void 0:o.value;return a});return e?n[0]:n},lt=async(t,e="en")=>{let r=await B(ei(t,e));return ae(r,!0)},ft=async(t,e="en")=>{let r=await B(fr(t,"person",e));return ae(r)},dt=async(t,e="en")=>{let r=await B(fr(t,"others",e));return ae(r)},pr=async(t,e="en")=>{let r=await B(ni(t,e));return ae(r)},hr=async(t,e="en")=>{let r=await B(ti(t,e));return ae(r)},vr=async(t,e="en")=>{let r=await B(ri(t,e));return ae(r)};var ii=async t=>{if(t.target.value.length<4)return;let e=`
+`,dr=new Map,B=async t=>{let e=dr.get(t);if(!e){let r=t.replace(/\n/g," ");return fetch(`https://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=${r}&format=application/json-ld`).then(i=>i.json()).then(i=>(dr.set(t,i),i))}return e},ae=(t,e=!1)=>{let r=t.head.vars,n=t.results.bindings.map(i=>{var o;let a={};for(let s of r)a[s]=(o=i[s])==null?void 0:o.value;return a});return e?n[0]:n},lt=async(t,e="en")=>{let r=await B(ei(t,e));return ae(r,!0)},ft=async(t,e="en")=>{let r=await B(fr(t,"person",e));return ae(r)},dt=async(t,e="en")=>{let r=await B(fr(t,"others",e));return ae(r)},pr=async(t,e="en")=>{let r=await B(ni(t,e));return ae(r)},hr=async(t,e="en")=>{let r=await B(ti(t,e));return ae(r)},vr=async(t,e="en")=>{let r=await B(ri(t,e));return ae(r)};var ii=async t=>{if(t.target.value.length<4)return;let e=`
         SELECT ?uri ?label ?image  (count(?influenced) as ?influence) { 
             ?uri rdfs:label ?label .
             ?uri a schema:Person .
@@ -151,7 +150,7 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
                     <h3 class="title"><img src="/bookmarks.svg"> Your bookmarks</h3>
 
                     <ul class="bookmark-list">
-                    ${t.map(e=>{let r=e.substr(1).split(",").map(i=>decodeURI(i).replaceAll("_"," ")),n=`${r[0]} > ${r[r.length-1]} (${r.length})`;return ye`
+                    ${t.map(e=>{let r=e.substr(1).split(",").map(i=>decodeURI(i).replace(/_/g," ")),n=`${r[0]} > ${r[r.length-1]} (${r.length})`;return ye`
                         <li>
                             <a class="bookmark" href=${e}>${n}</a>
                             <img class="remove-bookmark" onclick=${()=>{cr(e),S()}} src="/delete.svg" />
@@ -200,9 +199,9 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
     </ul>
     `:null},se="",pi=async()=>{let t=localStorage.saved?JSON.parse(localStorage.saved):[];(t.includes(location.pathname)?"bookmarked":"default")==="bookmarked"?(t=t.filter(r=>r!==location.pathname),se="bookmark-removed"):(t.push(location.pathname),se="bookmark-added"),localStorage.saved=JSON.stringify(t),await S(),setTimeout(()=>{se=t.includes(location.pathname)?"bookmarked":"default",S()},1500)},xr=new Map,De=[],Nr=async(t,e=!1)=>{let r=await Promise.all(t.map(o=>lt(o))),n=vt(location.hash,{popup:null}),i="";if(location.hash){let o=decodeURI(location.hash).substr(1);o==="info"?n.popup={label:"About this app",abstract:`The purple bars show the relative influence compared to all the others currently shown in the app.
                 
-                Click on the photos of the people to see a popup with more information. Click on the names to expand and see the influence of that person.`}:o&&(n.popup||setTimeout(()=>{lt(o,"en").then(s=>{var l;n.popup=s,i=(l=n.popup.abstract)!=null?l:"";let c=i.match(/(\.)[^ "]/g);if(c)for(let f of c)i=i.replace(f,`.
+                Click on the photos of the people to see a popup with more information. Click on the names to expand and see the influence of that person.`}:o&&(n.popup||setTimeout(()=>{lt(o,"en").then(s=>{var l,f;n.popup=s,i=(f=(l=n==null?void 0:n.popup)==null?void 0:l.abstract)!=null?f:"";let c=i.match(/(\.)[^ "]/g);if(c)for(let p of c)i=i.replace(p,`.
 
-`+f.substr(1));n.popup.abstract=i,S()})},100))}document.body.dataset.selectedPerson=(!!location.hash).toString(),se.includes("-")||(se=(localStorage.saved?JSON.parse(localStorage.saved):[]).includes(location.pathname)?"bookmarked":"default");let a=location.pathname;return xr.has(a)||Promise.all([dt(t[0]),Promise.resolve([r[0]]),...t.map(o=>ft(o))]).then(o=>{De=o.flatMap(s=>s.map(c=>parseInt(c.influence))).sort((s,c)=>s-c).filter(Rr),xr.set(a,!0),S()}),N`
+`+p.substr(1));n.popup.abstract=i,S()})},100))}document.body.dataset.selectedPerson=(!!location.hash).toString(),se.includes("-")||(se=(localStorage.saved?JSON.parse(localStorage.saved):[]).includes(location.pathname)?"bookmarked":"default");let a=location.pathname;return xr.has(a)||Promise.all([dt(t[0]),Promise.resolve([r[0]]),...t.map(o=>ft(o))]).then(o=>{De=o.flatMap(s=>s.map(c=>parseInt(c.influence))).sort((s,c)=>s-c).filter(Rr),xr.set(a,!0),S()}),N`
         ${location.hash?N`
         <div class="selected-person">
             ${n.popup?N`

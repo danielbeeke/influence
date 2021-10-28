@@ -100,7 +100,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
                     setTimeout(() => {
                         getPerson(id, 'en').then(object => {
                             hashState.popup = object
-                            body = hashState.popup.abstract ?? ''
+                            body = hashState?.popup?.abstract ?? ''
             
                             const matches = body.match(/(\.)[^ "]/g)
                             if (matches) {

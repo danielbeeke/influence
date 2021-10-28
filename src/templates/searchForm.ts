@@ -87,7 +87,7 @@ export const searchForm = () => {
 
                     <ul class="bookmark-list">
                     ${savedUrls.map(savedUrl => {
-                        const people = savedUrl.substr(1).split(',').map(name => decodeURI(name).replaceAll('_', ' '))
+                        const people = savedUrl.substr(1).split(',').map(name => decodeURI(name).replace(/_/g, ' '))
                         const label = `${people[0]} > ${people[people.length - 1]} (${people.length})`
 
                         return html`
