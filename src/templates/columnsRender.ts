@@ -109,7 +109,9 @@ export const columnsRender = async (ids, skipBookmark = false) => {
                                 }    
                             }
     
-                            hashState.popup.abstract = body
+                            if (hashState.popup) {
+                                hashState.popup.abstract = body
+                            }
                             drawApp()
                         })        
                     }, 100)

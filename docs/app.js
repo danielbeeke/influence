@@ -201,7 +201,7 @@ Error: `+s)}}}catch(s){r={error:s}}finally{try{a&&!a.done&&(n=i.return)&&n.call(
                 
                 Click on the photos of the people to see a popup with more information. Click on the names to expand and see the influence of that person.`}:o&&(n.popup||setTimeout(()=>{lt(o,"en").then(s=>{var l,f;n.popup=s,i=(f=(l=n==null?void 0:n.popup)==null?void 0:l.abstract)!=null?f:"";let c=i.match(/(\.)[^ "]/g);if(c)for(let p of c)i=i.replace(p,`.
 
-`+p.substr(1));n.popup.abstract=i,S()})},100))}document.body.dataset.selectedPerson=(!!location.hash).toString(),se.includes("-")||(se=(localStorage.saved?JSON.parse(localStorage.saved):[]).includes(location.pathname)?"bookmarked":"default");let a=location.pathname;return xr.has(a)||Promise.all([dt(t[0]),Promise.resolve([r[0]]),...t.map(o=>ft(o))]).then(o=>{De=o.flatMap(s=>s.map(c=>parseInt(c.influence))).sort((s,c)=>s-c).filter(Rr),xr.set(a,!0),S()}),N`
+`+p.substr(1));n.popup&&(n.popup.abstract=i),S()})},100))}document.body.dataset.selectedPerson=(!!location.hash).toString(),se.includes("-")||(se=(localStorage.saved?JSON.parse(localStorage.saved):[]).includes(location.pathname)?"bookmarked":"default");let a=location.pathname;return xr.has(a)||Promise.all([dt(t[0]),Promise.resolve([r[0]]),...t.map(o=>ft(o))]).then(o=>{De=o.flatMap(s=>s.map(c=>parseInt(c.influence))).sort((s,c)=>s-c).filter(Rr),xr.set(a,!0),S()}),N`
         ${location.hash?N`
         <div class="selected-person">
             ${n.popup?N`
