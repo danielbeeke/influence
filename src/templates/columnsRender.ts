@@ -86,6 +86,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
     let body = ''
     if (location.hash) {
         const id = decodeURI(location.hash).substr(1)
+
         if (id === 'info') {
             hashState.popup  = {
                 label: 'About this app',

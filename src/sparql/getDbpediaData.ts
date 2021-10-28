@@ -120,7 +120,7 @@ export const fetchQuery = async (query) => {
 
     if (!result) {
         const cleanedQuery = query.replace(/\n/g, ' ')
-        const promise = fetch(`https://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=${cleanedQuery}&format=application/json-ld`)
+        const promise = fetch(`https://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=${encodeURI(cleanedQuery)}&format=application/json-ld`)
         .then(response => response.json())
         .then(result => {
             staticCache.set(query, result)
