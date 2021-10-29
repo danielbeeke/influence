@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "nl.danielbeeke.influence.twa",
+                     "sha256_cert_fingerprints": ["C2:DF:C8:FE:FA:B2:93:C3:50:6F:C1:28:FD:57:97:AC:60:4C:E4:97:DB:A2:FD:C5:F7:F1:29:FD:C7:0C:9B:78"] }
+      }
+]
