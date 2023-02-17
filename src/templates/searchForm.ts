@@ -4,34 +4,24 @@ import { thumbnailAlternative } from '../helpers/thumbnailAlternative.js';
 import { drawApp } from '../app.js';
 import { lastPart } from '../helpers/lastPart.js';
 import { removeBookmark } from '../helpers/removeBookmark.js';
-import { fetchQuery } from '../sparql/getDbpediaData'
+import { doSearch } from '../sparql/getDbpediaData'
 
 const search = async (event) => {
     if (event.target.value.length < 4) return
-    
-    const query = `
-        SELECT ?uri ?label ?image  (count(?influenced) as ?influence) { 
-            ?uri rdfs:label ?label .
-            ?uri a schema:Person .
-            ?label bif:contains '"${event.target.value}"' .
-            OPTIONAL { ?uri dbo:image ?image }
-            filter langMatches(lang(?label), "en")
-            OPTIONAL { ?uri dbo:influenced|^dbo:influencedBy ?influenced }
-        }
-        ORDER BY DESC(?influence) 
-        LIMIT 20        
-    `
 
     isSearching = true
 
     drawApp()
 
-    const json = await fetchQuery(query)
-    updateSuggestions(json.results.bindings.map(binding => {
+    const results = await doSearch(event.target.value)
+
+    console.log(results)
+
+    updateSuggestions(results.map(item => {
         return {
-            label: binding.label.value,
-            image: binding.image?.value,
-            id: lastPart(binding.uri.value)
+            label: item.label,
+            image: item.image,
+            id: lastPart(item.uri)
         }
     }))
 

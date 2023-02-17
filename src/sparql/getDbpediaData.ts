@@ -77,6 +77,19 @@ const worksQuery = (identifier:string , langCode: string) => `
     ORDER BY ASC(?date)
 `
 
+const searchQuery = (searchString: string) => `
+SELECT ?uri ?label ?image  (count(?influenced) as ?influence) { 
+    ?uri rdfs:label ?label .
+    ?uri a schema:Person .
+    ?label bif:contains '"${searchString}"' .
+    OPTIONAL { ?uri dbo:image ?image }
+    filter langMatches(lang(?label), "en")
+    OPTIONAL { ?uri dbo:influenced|^dbo:influencedBy ?influenced }
+}
+ORDER BY DESC(?influence) 
+LIMIT 20        
+`
+
 const influenceQuery = (identifier: string, referType: 'person' | 'others', langCode: string) => `
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -177,4 +190,9 @@ export const getInterests = async (identifier, langCode = 'en') => {
 export const getNotableIdeas = async (identifier, langCode = 'en') => {
     const response = await fetchQuery(notableIdeaQuery(identifier, langCode))
     return processSparqlBindings(response)
+}
+
+export const doSearch = async (searchString: string): Promise<Array<any>> => {
+    const response = await fetchQuery(searchQuery(searchString))
+    return processSparqlBindings(response) as Array<any>
 }
