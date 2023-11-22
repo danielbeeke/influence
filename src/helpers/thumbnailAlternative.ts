@@ -1,5 +1,5 @@
 import { stringToColor } from './stringToColor.js'
-import { html } from 'https://cdn.skypack.dev/uhtml/async';
+import { html } from 'https://cdn.skypack.dev/uhtml@3.2.2/async';
 import kv from 'https://cdn.skypack.dev/@jacobmarshall/kv';
 import { thumbnailUrl } from './thumbnailUrl.js'
 import { drawApp } from '../app.js';

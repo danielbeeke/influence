@@ -1,4 +1,4 @@
-import { html, render } from 'https://cdn.skypack.dev/uhtml/async';
+import { html, render } from 'https://cdn.skypack.dev/uhtml@3.2.2/async';
 import { searchForm } from './templates/searchForm'
 import { throttle } from './helpers/throttle';
 import { getIds } from './helpers/getIds';

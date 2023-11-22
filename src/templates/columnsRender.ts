@@ -1,4 +1,4 @@
-import { html } from 'https://cdn.skypack.dev/uhtml/async';
+import { html } from 'https://cdn.skypack.dev/uhtml@3.2.2/async';
 import { getPerson, getInfluenced, getInfluencedBy, getWorks, getInterests, getNotableIdeas } from '../sparql/getDbpediaData';
 import { Person } from '../types'
 import { hasActivePerson } from '../helpers/hasActivePerson';

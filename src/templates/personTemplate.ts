@@ -1,6 +1,6 @@
 import { Person } from '../types'
 import { hasActivePerson } from '../helpers/hasActivePerson'
-import { html } from 'https://cdn.skypack.dev/uhtml/async';
+import { html } from 'https://cdn.skypack.dev/uhtml@3.2.2/async';
 import { thumbnailAlternative } from '../helpers/thumbnailAlternative';
 import { drawApp } from '../app';
 import { allInfluence } from './columnsRender';

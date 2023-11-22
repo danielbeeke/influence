@@ -1,4 +1,4 @@
-import { html } from 'https://cdn.skypack.dev/uhtml/async';
+import { html } from 'https://cdn.skypack.dev/uhtml@3.2.2/async';
 import { debounce } from '../helpers/debounce.js';
 import { thumbnailAlternative } from '../helpers/thumbnailAlternative.js';
 import { drawApp } from '../app.js';
