@@ -73,6 +73,7 @@ $border: 3px;
             background: black;
             left: 50%;
             top: 50%;
+            transition: transform .3s ease-in-out;
             transform: translate(-50%, -50%);
             border-radius: 4px;
         }
@@ -209,4 +210,17 @@ $border: 3px;
             }
         }
     }
+}
+
+.prepare-removal-column {
+    .person.is-closing {
+        .action-button {
+            animation: rotate 2.5s;
+        }
+    }
+}
+
+@keyframes rotate {
+    0% { transform: translateY(-50%) rotate(0); }
+    100% { transform: translateY(-50%) rotate(-360deg); }
 }

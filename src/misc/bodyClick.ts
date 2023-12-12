@@ -15,6 +15,9 @@ document.body.addEventListener('click', (event: Event) => {
             element.closest('.person').classList.add('loading')
             setTimeout(continueColumnsRender, 400)
         }
+        else if (isPerson && isActive) {
+            element.closest('.person').classList.add('is-closing')
+        }
         const columns = [...document.querySelectorAll('.column')]
 
         if (isPerson && isActive) {
@@ -32,8 +35,10 @@ document.body.addEventListener('click', (event: Event) => {
                             await drawApp()
                             deactivateColumnSearch(index - 1)
                             continueColumnsRender()
+                            document.body.classList.remove('prepare-removal-column')
                         }, { once: true })
                         column.classList.add('prepare-removal')
+                        document.body.classList.add('prepare-removal-column')
                     }
                 }    
             }
