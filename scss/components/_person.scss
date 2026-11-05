@@ -105,6 +105,7 @@ $border: 3px;
         overflow: hidden;
         transition: opacity .3s ease-in-out;
         flex: 0 0 56px;
+        object-fit: cover;
         z-index: 4;
         position: relative;
     }

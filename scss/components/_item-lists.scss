@@ -1,3 +1,5 @@
+@use './scroll-box.scss' as scrollBox;
+
 .item-list {
     padding-inline: 20px;
     overflow-y: auto;
@@ -44,11 +46,11 @@
 }
 
 .column:not(.selected) .item-lists {
-    @include scrollBox(white);
+    @include scrollBox.scrollBox(white);
 }
 
 .column.selected .item-lists {
-    @include scrollBox(rgb(243, 243, 255));
+    @include scrollBox.scrollBox(rgb(243, 243, 255));
 }
 
 .column.is-loading .item-lists {

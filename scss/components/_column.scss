@@ -1,11 +1,14 @@
+@use '../vars.scss';
+@use './scroll-box.scss' as scrollBox;
+
 .column {
     scroll-snap-align: start end;
     display: flex;
     flex-direction: column;
     position: relative;
     left: 0;
-    max-width: $mobileWidth;
-    flex: 0 0 $mobileWidth;
+    max-width: vars.$mobileWidth;
+    flex: 0 0 vars.$mobileWidth;
     background: white;
     overflow: hidden;
     animation: createColumn .4s ease-in-out .6s 1 both;
@@ -27,12 +30,12 @@
     &:not(.active) {
         &.selected {
             > .inner {
-                @include scrollBox(rgb(243, 243, 255));
+                @include scrollBox.scrollBox(rgb(243, 243, 255));
             }
         }
     
         &:not(.selected) > .inner {
-            @include scrollBox(white);
+            @include scrollBox.scrollBox(white);
         }    
     }
 
@@ -108,11 +111,11 @@
 
 @keyframes createColumn {
     0% { opacity: 0; max-width: 0; }
-    100% { opacity: 1; max-width: $mobileWidth; }
+    100% { opacity: 1; max-width: vars.$mobileWidth; }
 }
 
 @keyframes removeColumn {
-    0% { opacity: 1; max-width: $mobileWidth; }
+    0% { opacity: 1; max-width: vars.$mobileWidth; }
     100% { opacity: 0; max-width: 0; }
 }
 

@@ -9,6 +9,7 @@ import { continueColumnsRender } from './helpers/continueColumnsRender'
 // import * as Sentry from "@sentry/browser";
 // import { Integrations } from "@sentry/tracing";
 import { debounce } from './helpers/debounce';
+import { isWikidataId, resolveLegacyIds } from './sparql/getDbpediaData'
 
 // Sentry.init({
 //   dsn: "https://cd8164655d204832bba96a931a6a018e@o483393.ingest.sentry.io/6010247",
@@ -39,7 +40,14 @@ const routes = {
 }
 
 export const drawApp = throttle(async () => {
-    const ids = getIds()
+    let ids = getIds()
+
+    // Old (DBpedia era) URLs and bookmarks contain Wikipedia titles instead of Q-ids.
+    if (ids.some(id => !isWikidataId(id))) {
+        ids = await resolveLegacyIds(ids)
+        history.replaceState(history.state, '', `/${ids.join(',')}${location.hash}`)
+    }
+
     const routeName = ids.length ? 'columns' : 'search'
 
     try {
@@ -51,7 +59,7 @@ export const drawApp = throttle(async () => {
     }
     catch (exception) {
         if (exception.message === 'NetworkError when attempting to fetch resource.') {
-            render(document.body, html`<h1 class="dbpedia-offline">Unfortunatly DBpedia is down.<br>Please come back later.</h1>`)
+            render(document.body, html`<h1 class="dbpedia-offline">Unfortunatly Wikidata is down.<br>Please come back later.</h1>`)
         }
         else {
             console.info(exception)

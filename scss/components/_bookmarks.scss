@@ -15,19 +15,19 @@
     }
 
     &[data-state="default"] .icon {
-        background-image: url('./bookmark_border.svg');
+        background-image: url('/bookmark_border.svg');
     }
 
     &[data-state="bookmark-added"] .icon {
-        background-image: url('./bookmark_added.svg');
+        background-image: url('/bookmark_added.svg');
     }
 
     &[data-state="bookmarked"] .icon {
-        background-image: url('./bookmark.svg');
+        background-image: url('/bookmark.svg');
     }
 
     &[data-state="bookmark-removed"] .icon {
-        background-image: url('./bookmark_border.svg');
+        background-image: url('/bookmark_border.svg');
     }
 
     &[data-state="bookmark-removed"] {
@@ -48,11 +48,11 @@
 
     @media (hover: hover) {
         &[data-state="default"]:hover .icon {
-            background-image: url('./bookmark_add.svg');
+            background-image: url('/bookmark_add.svg');
         }
 
         &[data-state="bookmarked"]:hover .icon {
-            background-image: url('./bookmark_remove.svg');
+            background-image: url('/bookmark_remove.svg');
         }
     }
 }

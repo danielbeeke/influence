@@ -1,11 +1,11 @@
 {
   "scripts": {
-    "dev": "snowpack dev",
-    "build": "snowpack build && echo \"influence.danielbeeke.nl\" > docs/CNAME && cp docs/index.html docs/404.html"
+    "dev": "vite",
+    "build": "vite build && echo \"influence.danielbeeke.nl\" > docs/CNAME && cp docs/index.html docs/404.html"
   },
   "devDependencies": {
-    "@snowpack/plugin-sass": "^1.4.0",
-    "snowpack": "^3.8.8",
+    "sass": "^1.77.0",
+    "vite": "^5.2.0",
     "zingtouch": "^1.0.6"
   }
 }

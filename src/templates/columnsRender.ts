@@ -99,7 +99,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             if (id) {
                 if (!hashState.popup) {
                     setTimeout(() => {
-                        getPerson(id, 'en').then(object => {
+                        getPerson(id, 'en', true).then(object => {
                             hashState.popup = object
                             body = hashState?.popup?.abstract ?? ''
             
@@ -154,7 +154,7 @@ export const columnsRender = async (ids, skipBookmark = false) => {
             <div class="abstract">
                 ${thumbnailAlternative(hashState.popup.image, hashState.popup.label, 300, true)}
                 <p ref=${element => element.innerText = hashState.popup.abstract}></p>
-                ${parseInt(hashState.popup.isPerson) ? html`<a href=${`/${hashState.popup.id}`}>Start with ${hashState.popup.label}</a>` : null}
+                ${hashState.popup.isPerson === 'true' ? html`<a href=${`/${hashState.popup.id}`}>Start with ${hashState.popup.label}</a>` : null}
                 
             </div>
 

@@ -1,30 +1,21 @@
+@use './components/scroll-box.scss';
+@use './components/person.scss';
+@use './components/column.scss';
+@use './components/column-title.scss';
+@use './components/search-form.scss';
+@use './components/suggestion.scss';
+@use './components/selected-person.scss';
+@use './components/dbpedia-offline.scss';
+@use './components/item-lists.scss';
+@use './components/hint.scss';
+@use './components/bookmarks.scss';
+@use './components/restart-button.scss';
+@use './components/fixed-button.scss';
+@use './components/legend.scss';
+@use './layout.scss';
+@use './base.scss';
 @use "sass:math";
-$mobileWidth: calc(100vw - 60px);
-
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
-@import './components/scroll-box';
-
-@import './components/person';
-@import './components/column';
-@import './components/column-title';
-@import './components/search-form';
-@import './components/suggestion';
-@import './components/selected-person';
-@import './components/dbpedia-offline';
-@import './components/item-lists';
-@import './components/hint';
-@import './components/bookmarks';
-@import './components/restart-button';
-@import './components/fixed-button';
-@import './components/legend';
-
-@import './layout';
-@import './base';
-
-
-
-
-
 
 
 

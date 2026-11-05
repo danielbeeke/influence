@@ -67,7 +67,7 @@ export const searchForm = () => {
 
             ${!suggestions.length ? html`
             <div class="hint">
-            You can try <a href="/Søren_Kierkegaard">Søren Kierkegaard</a> or <a href="/Plato">Plato</a>
+            You can try <a href="/Q6512">Søren Kierkegaard</a> or <a href="/Q859">Plato</a>
             </div>
             ` : null }
 
