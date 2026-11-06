@@ -4,7 +4,7 @@ import { thumbnailAlternative } from '../helpers/thumbnailAlternative.js';
 import { drawApp } from '../app.js';
 import { lastPart } from '../helpers/lastPart.js';
 import { removeBookmark } from '../helpers/removeBookmark.js';
-import { doSearch } from '../sparql/getDbpediaData'
+import { doSearch } from '../data/queries'
 
 const search = async (event) => {
     if (event.target.value.length < 4) return

@@ -1,4 +1,4 @@
-# Dbpedia Influence view
+# Influence view
 
 A little webapp to view relationships of influence between people that are on Wikipedia. 
 

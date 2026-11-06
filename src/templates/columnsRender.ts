@@ -1,5 +1,5 @@
 import { html } from 'https://cdn.skypack.dev/uhtml@3.2.2/async';
-import { getPerson, getInfluenced, getInfluencedBy, getWorks, getInterests, getNotableIdeas } from '../sparql/getDbpediaData';
+import { getPerson, getInfluenced, getInfluencedBy, getWorks, getInterests, getNotableIdeas } from '../data/queries';
 import { Person } from '../types'
 import { hasActivePerson } from '../helpers/hasActivePerson';
 import { personTemplate } from './personTemplate';

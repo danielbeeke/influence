@@ -4,8 +4,8 @@ import kv from 'https://cdn.skypack.dev/@jacobmarshall/kv';
 import { commonsThumbnail, thumbnailUrl } from './thumbnailUrl.js'
 import { drawApp } from '../app.js';
 
-// v2: the old store keyed failures by label, so one failed load (or a DBpedia-era miss) hid the
-// Wikidata image for that person forever. Entries are now keyed by what they describe.
+// v2: the old store keyed failures by label, so one failed load (or an old lookup miss) hid the
+// image from the data source for that person forever. Entries are now keyed by what they describe.
 const cache = kv('thumbnailAlternative-v2')
 const wikipediaKey = (label: string) => `wikipedia:${label}`
 const failedKey = (image: string) => `failed:${image}`
@@ -19,7 +19,7 @@ export const thumbnailAlternative = async (preferredImage: string, label: string
         </div>`
     }
 
-    // The image from Wikidata wins; only look one up on Wikipedia when there is none.
+    // The image from the data source wins; only look one up on Wikipedia when there is none.
     let image: string | false | undefined = preferredImage
     if (!image && label) {
         image = await cache.get(wikipediaKey(label))
