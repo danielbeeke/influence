@@ -1,15 +1,11 @@
-console.log('hi from service worker')
-
-self.addEventListener('fetch', function(event) {
-    event.respondWith(async function() {
-       try{
-         var res = await fetch(event.request);
-         var cache = await caches.open('cache');
-         cache.put(event.request.url, res.clone());
-         return res;
-       }
-       catch(error){
-         return caches.match(event.request);
-        }
-      }());
-  });
+// The app moved to influence.shapething.com. Remove the old caching worker.
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
+    await self.registration.unregister();
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach((client) => client.navigate(client.url));
+  })());
+});

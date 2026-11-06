@@ -1,8 +1,5 @@
 # Influence view
 
-A little webapp to view relationships of influence between people that are on Wikipedia. 
+This project has moved. The app now lives at https://influence.shapething.com.
 
-Used libraries:
-
-- [webreflection/uHTML](https://github.com/webreflection/uHTML)
-- [@jacobmarshall/kv](https://github.com/@jacobmarshall/kv)
+`docs/` (served by GitHub Pages at influence.danielbeeke.nl) only contains a redirect to the new location.

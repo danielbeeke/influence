@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && echo \"influence.danielbeeke.nl\" > docs/CNAME && cp docs/index.html docs/404.html"
+    "dev": "vite"
   },
   "devDependencies": {
     "sass": "^1.77.0",
